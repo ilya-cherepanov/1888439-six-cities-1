@@ -11,8 +11,8 @@ export default class VersionCommand implements CliCommandInterface {
     return content.version;
   };
 
-  public execute = (): void => {
+  public async execute(): Promise<void> {
     const version = this.readVersion();
     console.log(version);
-  };
+  }
 }

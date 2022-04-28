@@ -1,4 +1,4 @@
 export interface FileReaderInterface {
   readonly fileName: string;
-  read: () => void;
+  read(): void;
 }

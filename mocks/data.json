@@ -1,268 +1,78 @@
 {
-  "users": [
-    {
-      "id": 1,
-      "name": "Oliver.conner",
-      "email": "Oliver.conner@gmail.com",
-      "avatar": "https://9.react.pages.academy/static/avatar/1.jpg",
-      "password": "1234ab",
-      "userType": "regular"
-    },
-
-    {
-      "id": 2,
-      "name": "John.connor",
-      "email": "john.connor@gmail.com",
-      "avatar": "https://9.react.pages.academy/static/avatar/2.jpg",
-      "password": "2345ab",
-      "userType": "pro"
-    },
-
-    {
-      "id": 3,
-      "name": "Sarah.connor",
-      "email": "sarah.connor@gmail.com",
-      "avatar": "https://9.react.pages.academy/static/avatar/3.jpg",
-      "password": "3456ab",
-      "userType": "pro"
-    },
-
-    {
-      "id": 4,
-      "name": "Marty.mcfly",
-      "email": "marty.mcfly@gmail.com",
-      "avatar": "https://9.react.pages.academy/static/avatar/4.jpg",
-      "password": "4567ab",
-      "userType": "regular"
-    },
-
-    {
-      "id": 5,
-      "name": "Eren.yeager",
-      "email": "eren.yeager@gmail.com",
-      "avatar": "https://9.react.pages.academy/static/avatar/5.jpg",
-      "password": "4567ab",
-      "userType": "regular"
-    }
-  ],
-
-
-  "offers": [
-    {
-      "title": "Canal View Prinsengracht",
-      "description": "Discover daily local life in city center, friendly neighborhood, clandestine casino, karaoke, old-style artisans, art gallery and artist studio downstairs.",
-      "date": "2022-02-15T21:48:13.665Z",
-      "city": "Dusseldorf",
-      "previewImage": "https://9.react.pages.academy/static/hotel/4.jpg",
-      "images": [
-        "https://9.react.pages.academy/static/hotel/6.jpg",
-        "https://9.react.pages.academy/static/hotel/13.jpg",
-        "https://9.react.pages.academy/static/hotel/16.jpg",
-        "https://9.react.pages.academy/static/hotel/18.jpg",
-        "https://9.react.pages.academy/static/hotel/17.jpg",
-        "https://9.react.pages.academy/static/hotel/8.jpg"
-      ],
-      "isPremium": false,
-      "rating": 4.6,
-      "type": "house",
-      "bedrooms": 4,
-      "maxGuests": 5,
-      "price": 463,
-      "goods": [
-        "Baby seat",
-        "Laptop friendly workspace",
-        "Air conditioning",
-        "Fridge",
-        "Washer",
-        "Towels",
-        "Breakfast"
-      ],
-      "authorId": 2,
-      "comments": 1,
-      "location": {
-        "latitude": 51.236402000000005,
-        "longitude": 6.784314
-      }
-    },
-
-    {
-      "title": "The Joshua Tree House",
-      "description": "Design interior in most sympathetic area! Complitely renovated, well-equipped, cosy studio in idyllic, over 100 years old wooden house. Calm street, fast connection to center and airport.",
-      "date": "2022-02-22T21:48:13.665Z",
-      "city": "Brussels",
-      "previewImage": "https://9.react.pages.academy/static/hotel/8.jpg",
-      "images": [
-        "https://9.react.pages.academy/static/hotel/18.jpg",
-        "https://9.react.pages.academy/static/hotel/8.jpg",
-        "https://9.react.pages.academy/static/hotel/9.jpg",
-        "https://9.react.pages.academy/static/hotel/5.jpg",
-        "https://9.react.pages.academy/static/hotel/17.jpg",
-        "https://9.react.pages.academy/static/hotel/10.jpg"
-      ],
-      "isPremium": false,
-      "rating": 3.1,
-      "type": "hotel",
-      "bedrooms": 3,
-      "maxGuests": 8,
-      "price": 122,
-      "goods": [
-        "Laptop friendly workspace",
-        "Breakfast"
-      ],
-      "authorId": 1,
-      "comments": 10,
-      "location": {
-        "latitude": 50.867557,
-        "longitude": 4.371696999999999
-      }
-    },
-
-    {
-      "title": "Wood and stone place",
-      "description": "A new spacious villa, one floor. All commodities, jacuzzi and beautiful scenery. Ideal for families or friends.",
-      "date": "2022-02-26T21:48:13.665Z",
-      "city": "Dusseldorf",
-      "previewImage": "https://9.react.pages.academy/static/hotel/5.jpg",
-      "images": [
-        "https://9.react.pages.academy/static/hotel/5.jpg",
-        "https://9.react.pages.academy/static/hotel/16.jpg",
-        "https://9.react.pages.academy/static/hotel/11.jpg",
-        "https://9.react.pages.academy/static/hotel/19.jpg",
-        "https://9.react.pages.academy/static/hotel/7.jpg",
-        "https://9.react.pages.academy/static/hotel/2.jpg"
-      ],
-      "isPremium": false,
-      "rating": 4.7,
-      "type": "hotel",
-      "bedrooms": 4,
-      "maxGuests": 7,
-      "price": 454,
-      "goods": [
-        "Laptop friendly workspace",
-        "Breakfast",
-        "Air conditioning",
-        "Baby seat",
-        "Towels",
-        "Washer"
-      ],
-      "authorId": 3,
-      "comments": 0,
-      "location": {
-        "latitude": 51.239402000000005,
-        "longitude": 6.756314000000001
-      }
-    },
-
-    {
-      "title": "Loft Studio in the Central Area",
-      "description": "Relax, rejuvenate and unplug in this ultimate rustic getaway experience in the country. In our beautiful screened Pondhouse, you can gaze at the stars and listen to the sounds of nature from your cozy warm bed.",
-      "date": "2022-03-12T21:48:13.665Z",
-      "city": "Brussels",
-      "previewImage": "https://9.react.pages.academy/static/hotel/14.jpg",
-      "images": [
-        "https://9.react.pages.academy/static/hotel/6.jpg",
-        "https://9.react.pages.academy/static/hotel/4.jpg",
-        "https://9.react.pages.academy/static/hotel/10.jpg",
-        "https://9.react.pages.academy/static/hotel/3.jpg",
-        "https://9.react.pages.academy/static/hotel/19.jpg",
-        "https://9.react.pages.academy/static/hotel/16.jpg"
-      ],
-      "isPremium": false,
-      "rating": 3.2,
-      "type": "room",
-      "bedrooms": 1,
-      "maxGuests": 1,
-      "price": 124,
-      "goods": [
-        "Baby seat",
-        "Air conditioning",
-        "Breakfast",
-        "Towels",
-        "Fridge",
-        "Washer",
-        "Laptop friendly workspace"
-      ],
-      "authorId": 4,
-      "comments": 2,
-      "location": {
-        "latitude": 50.842557,
-        "longitude": 4.363696999999999
-      }
-    },
-
-    {
-      "title": "Nice, cozy, warm big bed apartment",
-      "description": "This is a place for dreamers to reset, reflect, and create. Designed with a 'slow' pace in mind, our hope is that you enjoy every part of your stay; from making local coffee by drip in the morning, choosing the perfect record to put on as the sun sets.",
-      "date": "2022-03-21T21:48:13.665Z",
-      "city": "Brussels",
-      "previewImage": "https://9.react.pages.academy/static/hotel/5.jpg",
-      "images": [
-        "https://9.react.pages.academy/static/hotel/8.jpg",
-        "https://9.react.pages.academy/static/hotel/4.jpg",
-        "https://9.react.pages.academy/static/hotel/9.jpg",
-        "https://9.react.pages.academy/static/hotel/3.jpg",
-        "https://9.react.pages.academy/static/hotel/18.jpg",
-        "https://9.react.pages.academy/static/hotel/1.jpg"
-      ],
-      "isPremium": false,
-      "rating": 4,
-      "type": "room",
-      "bedrooms": 1,
-      "maxGuests": 3,
-      "price": 287,
-      "goods": [
-        "Breakfast",
-        "Air conditioning",
-        "Washer",
-        "Baby seat",
-        "Laptop friendly workspace",
-        "Fridge",
-        "Towels"
-      ],
-      "authorId": 5,
-      "comments": 3,
-      "location": {
-        "latitude": 50.827557,
-        "longitude": 4.336697
-      }
-    }
-  ],
-
-
-  "comments": [
-    {
-      "rating": 4,
-      "comment": "I stayed here for one night and it was an unpleasant experience.",
-      "date": "2022-02-16T21:48:13.665Z",
-      "authorId": 1
-    },
-
-    {
-      "rating": 4,
-      "comment": "Home is amazing. It's like staying in a museum. The rooms, furnishings and artworks are incredible. The views of My Vesuvius",
-      "date": "2022-02-22T21:48:13.667Z",
-      "authorId": 1
-    },
-
-    {
-      "rating": 3,
-      "comment": "Home is amazing. It's like staying in a museum. The rooms, furnishings and artworks are incredible. The views of My Vesuvius",
-      "date": "2022-02-22T21:48:13.667Z",
-      "authorId": 2
-    },
-
-    {
-      "rating": 4,
-      "comment": "The deluxe room was a quite comfortable one with all the adequate facilities. The only thing that made me feel uncomfortable was the rude behavior of an impolite staff at the reception desk.",
-      "date": "2022-02-10T21:48:13.667Z",
-      "authorId": 4
-    },
-
-    {
-      "rating": 5,
-      "comment": "We loved it so much, the house, the view, the location just great.. Highly reccomend :)",
-      "date": "2022-02-01T21:48:13.667Z",
-      "authorId": 3
-    }
-  ]
+  "api": {
+    "titles": [
+      "Canal View Prinsengracht",
+      "The Joshua Tree House",
+      "Wood and stone place",
+      "Loft Studio in the Central Area",
+      "Nice, cozy, warm big bed apartment"
+    ],
+    "descriptions": [
+      "This is a place for dreamers to reset, reflect, and create. Designed with a 'slow' pace in mind, our hope is that you enjoy every part of your stay; from making local coffee by drip in the morning, choosing the perfect record to put on as the sun sets.",
+      "Relax, rejuvenate and unplug in this ultimate rustic getaway experience in the country. In our beautiful screened Pondhouse, you can gaze at the stars and listen to the sounds of nature from your cozy warm bed.",
+      "A new spacious villa, one floor. All commodities, jacuzzi and beautiful scenery. Ideal for families or friends.",
+      "Design interior in most sympathetic area! Complitely renovated, well-equipped, cosy studio in idyllic, over 100 years old wooden house. Calm street, fast connection to center and airport.",
+      "Discover daily local life in city center, friendly neighborhood, clandestine casino, karaoke, old-style artisans, art gallery and artist studio downstairs."
+    ],
+    "cities": [
+      "Paris",
+      "Cologne",
+      "Brussels",
+      "Amsterdam",
+      "Hamburg",
+      "Dusseldorf"
+    ],
+    "housingTypes": [
+      "apartment",
+      "house",
+      "room",
+      "hotel"
+    ],
+    "goods": [
+      "Breakfast",
+      "Air conditioning",
+      "Laptop friendly workspace",
+      "Baby seat",
+      "Washer",
+      "Towels",
+      "Fridge"
+    ],
+    "images": [
+      "https://9.react.pages.academy/static/hotel/1.jpg",
+      "https://9.react.pages.academy/static/hotel/2.jpg",
+      "https://9.react.pages.academy/static/hotel/3.jpg",
+      "https://9.react.pages.academy/static/hotel/4.jpg",
+      "https://9.react.pages.academy/static/hotel/5.jpg",
+      "https://9.react.pages.academy/static/hotel/6.jpg",
+      "https://9.react.pages.academy/static/hotel/7.jpg",
+      "https://9.react.pages.academy/static/hotel/8.jpg",
+      "https://9.react.pages.academy/static/hotel/9.jpg",
+      "https://9.react.pages.academy/static/hotel/10.jpg"
+    ],
+    "userNames": [
+      "Oliver.conner",
+      "John.connor",
+      "Sarah.connor",
+      "Marty.mcfly",
+      "Eren.yeager"
+    ],
+    "avatars": [
+      "https://9.react.pages.academy/static/avatar/1.jpg",
+      "https://9.react.pages.academy/static/avatar/2.jpg",
+      "https://9.react.pages.academy/static/avatar/3.jpg",
+      "https://9.react.pages.academy/static/avatar/4.jpg",
+      "https://9.react.pages.academy/static/avatar/5.jpg"
+    ],
+    "userTypes": [
+      "regular",
+      "pro"
+    ],
+    "comments": [
+      "I stayed here for one night and it was an unpleasant experience.",
+      "Home is amazing. It's like staying in a museum. The rooms, furnishings and artworks are incredible. The views of My Vesuvius",
+      "The deluxe room was a quite comfortable one with all the adequate facilities. The only thing that made me feel uncomfortable was the rude behavior of an impolite staff at the reception desk.",
+      "We loved it so much, the house, the view, the location just great.. Highly reccomend :)",
+      "What an amazing view! The house is stunning and in an amazing location. The large glass wall had an amazing view of the river!"
+    ]
+  }
 }
