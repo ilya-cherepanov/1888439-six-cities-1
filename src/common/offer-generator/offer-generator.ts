@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import mongoose from 'mongoose';
 import {Bedrooms, CityLocations, Guests, IMAGES_COUNT, Location, MIN_GOODS, Price, Rating, TSV_ARRAY_DELIMITER} from '../../consts.js';
 import {City} from '../../types/city.enum.js';
 import {MockData} from '../../types/mock-data.type.js';
@@ -23,7 +24,7 @@ export class OfferGenerator implements OfferGeneratorInterface {
     const maxGuests = getRandomInt(Guests.Min, Guests.Max);
     const price = getRandomInt(Price.Min, Price.Max);
     const goods = getRandomArrayElements(this.mockData.goods, getRandomInt(MIN_GOODS, this.mockData.goods.length)).join(TSV_ARRAY_DELIMITER);
-    const authorId = getRandomInt(1, 100);
+    const authorId = new mongoose.Types.ObjectId().toHexString();
     const comments = getRandomInt(0, 10);
     const latitude = getRandomFixedPoint(
       CityLocations[city as City].latitude - Location.Deviation,

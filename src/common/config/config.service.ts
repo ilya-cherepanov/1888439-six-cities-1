@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import {config} from 'dotenv';
 import {inject, injectable} from 'inversify';
 import {Component} from '../../types/componets.js';

@@ -41,7 +41,7 @@ const createOffer = (row: string): Offer => {
     maxGuests: Number(maxGuests),
     price: Number(price),
     goods: goods.split(TSV_ARRAY_DELIMITER) as Good[],
-    authorId: Number(authorId),
+    author: authorId,
     comments: Number(comments),
     location: {
       latitude: Number(location.split(TSV_ARRAY_DELIMITER)[0]),

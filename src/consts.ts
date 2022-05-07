@@ -58,6 +58,21 @@ enum Location {
   Precision = 6
 }
 
+enum OfferTitle {
+  Min = 10,
+  Max = 120,
+}
+
+enum OfferDescription {
+  Min = 20,
+  Max = 1024,
+}
+
+enum UserName {
+  MinLength = 1,
+  MaxLength = 15,
+}
+
 
 const IMAGES_COUNT = 6;
 
@@ -73,6 +88,9 @@ export {
   Bedrooms,
   Guests,
   Location,
+  OfferTitle,
+  OfferDescription,
+  UserName,
   TSV_ARRAY_DELIMITER,
   IMAGES_COUNT,
   MIN_GOODS
