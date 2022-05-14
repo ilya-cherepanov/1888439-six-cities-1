@@ -1,0 +1,533 @@
+openapi: 3.0.0
+
+
+info:
+  title: API для проекта "Шесть городов"
+  version: "1.0.0"
+
+
+tags:
+  - name: offer
+    description: Действия с объявлениями
+  - name: user
+    description: Действия с пользователями
+  - name: comment
+    description: Действия с комментариями
+
+
+paths:
+  /offers:
+    get:
+      tags: [offer]
+      summary: Получить список предложений по аренде
+      description: Возвращает массив предложений об аренде. Каждое предложение описано в виде объекта.
+      operationId: getOffers
+      responses:
+        200:
+          description: Массив предложений
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {$ref: "#/components/schemas/Offer"}
+                maxItems: 60
+
+    post:
+      tags: [offer]
+      summary: Добавить новое предложение об аренде
+      description: Добавляет новое предложение об аренде
+      operationId: createOffer
+      parameters:
+        - $ref: "#/components/parameters/authToken"
+      requestBody:
+        description: Объект с новым объявлением
+        content:
+          application/json:
+            schema: {$ref: "#/components/schemas/CreateOffer"}
+        required: true
+      responses:
+        201:
+          description: Создано новое объявление
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {$ref: "#/components/schemas/Offer"}
+                maxItems: 60
+        401:
+          description: Пользователь не авторизован
+        400:
+          description: Ошибка тела запроса
+
+  /offers/{offerId}:
+    get:
+      tags: [offer]
+      summary: Получить объявление об аренде
+      description: Получить детальное предложение об аренде с идентификатором `offerId`.
+      operationId: getOneOffer
+      parameters:
+        - $ref: "#/components/parameters/offerId"
+      responses:
+        200:
+          description: Предложение об аренде
+          content:
+            application/json:
+              schema: {$ref: "#/components/schemas/Offer"}
+        404:
+          description: Предложения об аренде не найдено
+
+    put:
+      tags: [offer]
+      summary: Обновить предложение об аренде
+      description: Обновить предложение об аренде с идентификатором `offerId`
+      operationId: updateOffer
+      parameters:
+        - $ref: "#/components/parameters/offerId"
+        - $ref: "#/components/parameters/authToken"
+      requestBody:
+        description: Объект с обновленным предложением об аренде
+        content:
+          application/json:
+            schema: {$ref: "#/components/schemas/CreateOffer"}
+        required: true
+      responses:
+        200:
+          description: Предложение об аренде обновлено
+          content:
+            application/json:
+              schema: {$ref: "#/components/schemas/Offer"}
+        400:
+          description: Ошибка тела запроса
+        401:
+          description: Пользователь не авторизован
+        403:
+          description: Предложение об аренде создано другим пользователем
+        404:
+          description: Предложения об аренде не существует
+
+    delete:
+      tags: [offer]
+      summary: Удалить предложение об аренде
+      description: Удалить предложение об аренде с идентификатором `offerId`
+      operationId: deleteOffer
+      parameters:
+        - $ref: "#/components/parameters/offerId"
+        - $ref: "#/components/parameters/authToken"
+      responses:
+        204:
+          description: Предложение об аренде удалено
+        401:
+          description: Пользователь не авторизован
+        403:
+          description: Предложение об аренде создано другим пользователем
+        404:
+          description: Предложение об аренде не существует
+
+  /premium:
+    get:
+      tags: [offer]
+      summary: Получить премиальные предложения об аренде
+      description: Получает массив объектов предложений об аренде, которые помечены флагом 'Premium'
+      operationId: getPremiumOffers
+      responses:
+        200:
+          description: Премиальные предложения
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {$ref: "#/components/schemas/Offer"}
+                maxItems: 3
+
+  /favorites:
+    get:
+      tags: [offer]
+      summary: Получить избранные предложения об аренде
+      description: Возвращает массив объектов с избранными предложениями об аренде для пользователя.
+      operationId: getFavorites
+      parameters:
+        - $ref: "#/components/parameters/authToken"
+      responses:
+        200:
+          description: Массив с избранными предложениями об аренде
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {$ref: "#/components/schemas/Offer"}
+        401:
+          description: Пользователь не авторизован
+
+  /favorites/{offerId}/{status}:
+    post:
+      tags: [offer]
+      summary: Изменить статус избранного для предложения об аренде
+      description: Используя значение из параметра `status`, устанавливает статус избранного для предложения об аренде с идентификатором `offerId`
+      operationId: changeFavorite
+      parameters:
+        - $ref: "#/components/parameters/offerId"
+        - $ref: "#/components/parameters/authToken"
+        - name: status
+          in: path
+          description: Статус избранного для предложения об аренде
+          required: true
+          schema:
+            type: integer
+            format: int32
+            enum: [0, 1]
+            example: 1
+      responses:
+        200:
+          description: Статус установлен
+          content:
+            application/json:
+              schema: {$ref: "#/components/schemas/Offer"}
+        400:
+          description: Некорректный статус
+        401:
+          description: Пользователь не авторизован
+        404:
+          description: Предложения не существует
+
+  /offers/{offerId}/comments:
+    get:
+      tags: [comment]
+      summary: Получить комментарии для предложения об аренде
+      description: Получить комментарии для предложения об аренде с идентификатором `offerId`
+      operationId: getComments
+      parameters:
+        - $ref: "#/components/parameters/offerId"
+      responses:
+        200:
+          description: Массив комментариев предложения об аренде
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {$ref: "#/components/schemas/Comment"}
+                maxItems: 50
+        404:
+          description: Предложения об аренде не существует
+
+    post:
+      tags: [comment]
+      summary: Создать комментарий для предложения об аренде
+      description: Создать комментарий для предложения об аренде с идентификатором `offerId`
+      operationId: createComment
+      parameters:
+        - $ref: "#/components/parameters/offerId"
+        - $ref: "#/components/parameters/authToken"
+      requestBody:
+        description: Объект с новым комментарием
+        content:
+          application/json:
+            schema: {$ref: "#/components/schemas/CreateComment"}
+        required: true
+      responses:
+        201:
+          description: Новый комментарий
+          content:
+            application/json:
+              schema: {$ref: "#/components/schemas/Comment"}
+        400:
+          description: Ошибка тела запроса
+        401:
+          description: Пользователь не авторизован
+        404:
+          description: Предложения об аренде не существует
+
+  /login:
+    post:
+      tags: [user]
+      summary: Авторизовать пользователя
+      description: Авторизовать пользователя на сервере
+      operationId: userLogin
+      requestBody:
+        description: Объект с реквизитами для входа
+        content:
+          application/json:
+            schema: {$ref: "#/components/schemas/LoginUser"}
+      responses:
+        200:
+          description: Аутентификационный токен
+          content:
+            application/json:
+             schema: {$ref: "#/components/schemas/AuthorizationToken"}
+        400:
+          description: Ошибка тела запроса
+        401:
+          description: Пользователя с такой почтой и паролем не существует
+
+    get:
+      tags: [user]
+      summary: Проверка статуса авторизации
+      description: Возвращает объект с информацией о статусе авторизации пользователя.
+      operationId: checkUser
+      parameters:
+        - $ref: "#/components/parameters/authToken"
+      responses:
+        200:
+          description: Объект с данными о пользователе
+          content:
+            application/json:
+              schema: {$ref: "#/components/schemas/User"}
+        401:
+          description: Токен не валиден
+
+  /logout:
+    delete:
+      tags: [user]
+      summary: Завершение пользовательского сеанса
+      description: Завершает пользовательский сеанс
+      operationId: userLogout
+      parameters:
+        - $ref: "#/components/parameters/authToken"
+      responses:
+        204:
+          description: Сеанс завершен
+
+  /sign-up:
+    post:
+      tags: [user]
+      summary: Создание нового пользователя
+      description: Создает нового пользователя, используя данные полученные от клиента
+      operationId: userSignUp
+      requestBody:
+        description: Объект с данными для регистрации
+        content:
+          application/json:
+            schema: {$ref: "#/components/schemas/CreateUser"}
+      responses:
+        201:
+          description: Пользователь создан
+          content:
+            application/json:
+              schema: {$ref: "#/components/schemas/AuthorizedUser"}
+        400:
+          description: Ошибка тела запроса
+
+
+components:
+  schemas:
+    CreateOffer:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Penthouse, 4-5 rooms + 5 balconies
+        description:
+          type: string
+          example: Peaceful studio in the most wanted area in town. Quiet house Near of everything. Completely renovated. Lovely neighbourhood, lot of trendy shops, restaurants and bars in a walking distance.
+        date:
+          type: string
+          format: date-time
+          example: "2022-04-03T21:48:13.665Z"
+        city:
+          type: string
+          enum:
+            - Paris
+            - Cologne
+            - Brussels
+            - Amsterdam
+            - Hamburg
+            - Dusseldorf
+          example: Hamburg
+        previewImage:
+          type: string
+          format: uri
+          example: https://9.react.pages.academy/static/hotel/16.jpg
+        images:
+          type: array
+          items:
+            type: string
+            format: uri
+          minItems: 6
+          maxItems: 6
+          example:
+            - https://9.react.pages.academy/static/hotel/2.jpg
+            - https://9.react.pages.academy/static/hotel/4.jpg
+            - https://9.react.pages.academy/static/hotel/15.jpg
+            - https://9.react.pages.academy/static/hotel/1.jpg
+            - https://9.react.pages.academy/static/hotel/16.jpg
+            - https://9.react.pages.academy/static/hotel/10.jpg
+        isPremium:
+          type: boolean
+          example: true
+        rating:
+          type: number
+          format: float
+          example: 3.8
+        type:
+          type: string
+          enum:
+            - apartment
+            - house
+            - room
+            - hotel
+          example: hotel
+        bedrooms:
+          type: integer
+          format: int32
+          example: 5
+        maxGuests:
+          type: integer
+          format: int32
+          example: 3
+        price:
+          type: integer
+          format: int32
+          example: 500
+        goods:
+          type: array
+          items:
+            type: string
+            enum:
+              - Breakfast
+              - Air conditioning
+              - Laptop friendly workspace
+              - Baby seat
+              - Washer
+              - Towels
+              - Fridge
+          example:
+            - Breakfast
+            - Baby seat
+            - Washer
+        author:
+          type: string
+          example: 6276ce22dd3c27ba7d0cfddf
+        location:
+          type: object
+          properties:
+            latitude:
+              type: number
+              format: double
+              example: 53.550341
+            longitude:
+              type: number
+              format: double
+              example: 9.980654000000001
+          example:
+            latitude: 53.550341
+            longitude: 9.980654000000001
+
+    Offer:
+      allOf:
+        - type: object
+          properties:
+            comments:
+              type: integer
+              format: int32
+              example: 4
+            id:
+              type: string
+              example: 62a6ce22dd3c32ba7d9cf32f
+        - $ref: "#/components/schemas/CreateOffer"
+
+    CreateComment:
+      type: object
+      properties:
+        comment:
+          type: string
+          example: The house is very good, very happy, hygienic and simple living conditions around it are also very good. I hope to have the opportunity to come back. Thank you.
+        date:
+          type: string
+          format: date-time
+          example: "2022-04-03T21:48:13.665Z"
+        rating:
+          type: number
+          format: float
+          example: 4.2
+        author:
+          type: string
+          example: 6276ce22dd3c27ba7d0cfddf
+
+    Comment:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: string
+              example: 62a6ce22dd3c32ba7d9cf32f
+        - $ref: "#/components/schemas/CreateComment"
+
+    LoginUser:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          example: user@mail.com
+        password:
+          type: string
+          format: password
+      required:
+        - email
+        - password
+
+    CreateUser:
+      allOf:
+        - type: object
+          properties:
+            name:
+              type: string
+              example: John.Connor
+            avatar:
+              type: string
+              format: uri
+              example: https://9.react.pages.academy/static/avatar/6.jpg
+          required:
+            - name
+        - $ref: "#/components/schemas/LoginUser"
+
+    User:
+      type: object
+      properties:
+        name:
+          type: string
+          example: John.Connor
+        email:
+          type: string
+          format: email
+          example: user@mail.com
+        avatar:
+          type: string
+          format: uri
+          example: https://9.react.pages.academy/static/avatar/6.jpg
+        userType:
+          type: string
+          enum:
+            - regular
+            - pro
+          example: pro
+
+    AuthorizationToken:
+      type: object
+      properties:
+        token:
+          type: string
+          example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
+
+    AuthorizedUser:
+      allOf:
+        - $ref: "#/components/schemas/AuthorizationToken"
+        - $ref: "#/components/schemas/User"
+
+  parameters:
+    offerId:
+      name: offerId
+      in: path
+      description: Уникальный идентификатор предложения об аренде
+      required: true
+      schema:
+        type: string
+        example: 62a6ce22dd3c32ba7d9cf32f
+
+    authToken:
+      in: header
+      name: X-Token
+      description: Аутентификационный токен пользователя
+      schema:
+        type: string
+        example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
+      required: true
