@@ -1,0 +1,19 @@
+@baseUrl = http://localhost:{{$dotenv PORT}}
+
+# Create user
+POST {{baseUrl}}/sign-up HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "John.Connor",
+  "email": "emailllll@mail.com",
+  "password": "1234abcd",
+  "avatar": "https://9.react.pages.academy/static/avatar/6.jpg",
+  "userType": "pro"
+}
+
+###
+
+# Check user
+GET {{baseUrl}}/offers/:offerId/comments HTTP/1.1
+Content-Type: application/json

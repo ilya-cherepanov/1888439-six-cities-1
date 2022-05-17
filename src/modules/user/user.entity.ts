@@ -1,5 +1,4 @@
-import typegoose, {getModelForClass} from '@typegoose/typegoose';
-import {TimeStamps} from '@typegoose/typegoose/lib/defaultClasses.js';
+import typegoose, {getModelForClass, defaultClasses} from '@typegoose/typegoose';
 import {UserName} from '../../consts.js';
 import {UserType} from '../../types/user-type.enum.js';
 import {User} from '../../types/user.type.js';
@@ -12,7 +11,7 @@ const {prop, modelOptions} = typegoose;
     collection: 'users',
   },
 })
-class UserEntity extends TimeStamps implements User {
+class UserEntity extends defaultClasses.TimeStamps implements User {
   constructor(data: User) {
     super();
 

@@ -1,6 +1,5 @@
 import 'reflect-metadata';
-import {DocumentType} from '@typegoose/typegoose';
-import {ModelType} from '@typegoose/typegoose/lib/types.js';
+import {DocumentType, ReturnModelType} from '@typegoose/typegoose';
 import {inject, injectable} from 'inversify';
 import {ObjectId} from 'mongoose';
 import CreateUserDTO from '../../modules/user/dto/create-user.dto.js';
@@ -13,7 +12,7 @@ import {UserServiceInterface} from '../../modules/user/user-service.interface.js
 @injectable()
 export default class UserService implements UserServiceInterface {
   constructor(
-    @inject(Component.UserModel) private readonly userModel: ModelType<UserEntity>,
+    @inject(Component.UserModel) private readonly userModel: ReturnModelType<typeof UserEntity>,
     @inject(Component.LoggerInterface) private logger: LoggerInterface,
   ) {}
 

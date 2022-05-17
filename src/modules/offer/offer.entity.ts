@@ -1,5 +1,4 @@
-import typegoose, {getModelForClass, Ref} from '@typegoose/typegoose';
-import {TimeStamps} from '@typegoose/typegoose/lib/defaultClasses.js';
+import typegoose, {getModelForClass, Ref, defaultClasses} from '@typegoose/typegoose';
 import {Bedrooms, Guests, OfferDescription, OfferTitle, Price, Rating} from '../../consts.js';
 import {City} from '../../types/city.enum.js';
 import {Good} from '../../types/good.enum.js';
@@ -15,7 +14,7 @@ const {modelOptions, prop} = typegoose;
     collection: 'offers',
   }
 })
-class OfferEntity extends TimeStamps {
+class OfferEntity extends defaultClasses.TimeStamps {
   constructor() {
     super();
   }

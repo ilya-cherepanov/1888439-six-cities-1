@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import {DocumentType, ModelType} from '@typegoose/typegoose/lib/types.js';
+import {DocumentType, ReturnModelType} from '@typegoose/typegoose';
 import {inject, injectable} from 'inversify';
 import {ObjectId} from 'mongoose';
 import {LoggerInterface} from '../../common/logger/logger.interface.js';
@@ -12,7 +12,7 @@ import {OfferEntity} from './offer.entity.js';
 @injectable()
 export default class OfferService implements OfferServiceInterface {
   constructor(
-    @inject(Component.OfferModel) private readonly offerModel: ModelType<OfferEntity>,
+    @inject(Component.OfferModel) private readonly offerModel: ReturnModelType<typeof OfferEntity>,
     @inject(Component.LoggerInterface) private logger: LoggerInterface
   ) {}
 
