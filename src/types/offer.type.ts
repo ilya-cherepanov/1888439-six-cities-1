@@ -1,6 +1,7 @@
 import {City} from './city.enum';
 import {Good} from './good.enum';
 import {HousingType} from './housing-type.enum';
+import {User} from './user.type';
 
 
 export type Offer = {
@@ -17,7 +18,7 @@ export type Offer = {
   maxGuests: number;
   price: number;
   goods: Good[];
-  author: string;
+  author: User;
   comments: number;
   location: {
     latitude: number;

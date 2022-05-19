@@ -10,6 +10,9 @@ import {OfferModel} from '../modules/offer/offer.entity.js';
 import {ConfigInterface} from '../common/config/config.interface.js';
 import ConfigService from '../common/config/config.service.js';
 import {createURI} from '../utils/db.js';
+import UserService from '../modules/user/user.service.js';
+import {UserModel} from '../modules/user/user.entity.js';
+import {Offer} from '../types/offer.type.js';
 
 
 export default class ImportCommand implements CliCommandInterface {
@@ -17,16 +20,18 @@ export default class ImportCommand implements CliCommandInterface {
 
   private logger = new ConsoleLoggerService();
   private databaseService!: DatabaseInterface;
-  private offerService!: OfferServiceInterface;
   private configService!: ConfigInterface;
+  private offerService!: OfferServiceInterface;
+  private userService!: UserService;
 
   constructor() {
     this.onRow = this.onRow.bind(this);
     this.onEnd = this.onEnd.bind(this);
 
     this.databaseService = new DatabaseService(this.logger);
-    this.offerService = new OfferService(OfferModel, this.logger);
     this.configService = new ConfigService(this.logger);
+    this.offerService = new OfferService(OfferModel, this.logger);
+    this.userService = new UserService(UserModel, this.logger);
   }
 
   public async execute(fileName: string): Promise<void> {
@@ -56,9 +61,21 @@ export default class ImportCommand implements CliCommandInterface {
     }
   }
 
+  private async saveOffer(offer: Offer): Promise<void> {
+    const user = await this.userService.findOrCreate(
+      offer.author,
+      this.configService.get('SALT')
+    );
+
+    await this.offerService.create({
+      ...offer,
+      author: user.id
+    });
+  }
+
   private async onRow(row: string, resolve: () => void): Promise<void> {
     const newOffer = createOffer(row);
-    await this.offerService.create(newOffer);
+    await this.saveOffer(newOffer);
     resolve();
   }
 

@@ -11,7 +11,7 @@ const {prop, modelOptions} = typegoose;
     collection: 'users',
   },
 })
-class UserEntity extends defaultClasses.TimeStamps implements User {
+class UserEntity extends defaultClasses.TimeStamps {
   constructor(data: User) {
     super();
 
