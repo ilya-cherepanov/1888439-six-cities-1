@@ -3,7 +3,7 @@ import {Good} from '../../../types/good.enum.js';
 import {HousingType} from '../../../types/housing-type.enum.js';
 
 
-export default class CreateOfferDTO {
+export default class UpdateOfferDTO {
   public title!: string;
   public description!: string;
   public date!: Date;

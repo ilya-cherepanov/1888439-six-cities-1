@@ -7,7 +7,7 @@ import {User} from './user.type';
 export type Offer = {
   title: string;
   description: string;
-  date: string;
+  date: Date;
   city: City;
   previewImage: string;
   images: string[];

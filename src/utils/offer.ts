@@ -46,7 +46,7 @@ const createOffer = (row: string): Offer => {
   return {
     title,
     description,
-    date,
+    date: new Date(date),
     city: city as City,
     previewImage,
     images: images.split(TSV_ARRAY_DELIMITER),

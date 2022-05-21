@@ -37,9 +37,9 @@ class OfferEntity extends defaultClasses.TimeStamps {
 
   @prop({
     required: true,
-    default: '',
+    default: new Date(),
   })
-  public date!: string;
+  public date!: Date;
 
   @prop({
     required: true,
@@ -117,6 +117,7 @@ class OfferEntity extends defaultClasses.TimeStamps {
   @prop({
     required: true,
     ref: () => UserEntity,
+    _id: false,
   })
   public author!: Ref<UserEntity>;
 

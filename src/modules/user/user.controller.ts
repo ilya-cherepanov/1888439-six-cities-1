@@ -12,6 +12,7 @@ import ConfigService from '../../common/config/config.service.js';
 import {fillDTO} from '../../utils/other.js';
 import UserDTO from './dto/user.dto.js';
 import HttpError from '../../common/errors/http-error.js';
+import LoginUserDTO from './dto/login-user.dto.js';
 
 
 @injectable()
@@ -31,28 +32,40 @@ export default class UserController extends Controller {
     this.addRoute({path: '/sign-up', method: HttpMethod.Post, handler: this.createUser});
   }
 
-  public async loginUser(_req: Request, _res: Response): Promise<void> {
-    throw new Error('Not implemented!');
+  public async loginUser(
+    {body}: Request<Record<string, unknown>, Record<string, unknown>, LoginUserDTO>,
+    _res: Response
+  ): Promise<void> {
+    const user = await this.userService.findByEmail(body.email);
+
+    if (!user) {
+      const errorMessage = `User with email ${body.email} not found!`;
+      throw new HttpError(StatusCodes.UNAUTHORIZED, errorMessage, 'UserController');
+    }
+
+    throw new HttpError(StatusCodes.NOT_IMPLEMENTED, 'Not implemented!', 'UserController');
   }
 
   public async checkUser(_req: Request, _res: Response): Promise<void> {
-    throw new Error('Not implemented!');
+    throw new HttpError(StatusCodes.NOT_IMPLEMENTED, 'Not implemented!', 'UserController');
   }
 
   public async logoutUser(_req: Request, _res: Response): Promise<void> {
-    throw new Error('Not implemented!');
+    throw new HttpError(StatusCodes.NOT_IMPLEMENTED, 'Not implemented!', 'UserController');
   }
 
-  public async createUser(req: Request<Record<string, unknown>, Record<string, unknown>, CreateUserDTO>, res: Response): Promise<void> {
-    const {body} = req;
-
+  public async createUser(
+    {body}: Request<Record<string, unknown>, Record<string, unknown>, CreateUserDTO>,
+    res: Response
+  ): Promise<void> {
     const existingUser = await this.userService.findByEmail(body.email);
+
     if (existingUser) {
-      const errorMessage = `User with email '${body.email}' exists.`;
+      const errorMessage = `User with email '${body.email}' already exists.`;
       throw new HttpError(StatusCodes.BAD_REQUEST, errorMessage, 'UserController');
     }
 
     const result = await this.userService.create(body, this.config.get('SALT'));
-    this.send(res, StatusCodes.CREATED, fillDTO(UserDTO, result));
+    this.created(res, fillDTO(UserDTO, result));
   }
 }

@@ -80,6 +80,10 @@ const MIN_GOODS = 1;
 
 const TSV_ARRAY_DELIMITER = ',';
 
+const DEFAULT_OFFERS_COUNT = 60;
+
+const MAX_PREMIUM_COUNT = 3;
+
 
 export {
   CityLocations,
@@ -93,5 +97,7 @@ export {
   UserName,
   TSV_ARRAY_DELIMITER,
   IMAGES_COUNT,
-  MIN_GOODS
+  MIN_GOODS,
+  DEFAULT_OFFERS_COUNT,
+  MAX_PREMIUM_COUNT,
 };

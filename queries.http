@@ -6,7 +6,7 @@ Content-Type: application/json
 
 {
   "name": "John.Connor",
-  "email": "emailllll@mail.com",
+  "email": "email@mail.com",
   "password": "1234abcd",
   "avatar": "https://9.react.pages.academy/static/avatar/6.jpg",
   "userType": "pro"
@@ -14,6 +14,111 @@ Content-Type: application/json
 
 ###
 
-# Check user
-GET {{baseUrl}}/offers/:offerId/comments HTTP/1.1
+# Login user
+POST {{baseUrl}}/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "email@mail.com",
+  "password": "1245abcd"
+}
+
+###
+
+# Get offers
+GET {{baseUrl}}/offers?count=10 HTTP/1.1
+Content-Type: application/json
+
+###
+
+# Get one offer
+GET {{baseUrl}}/offers/6288a57316071e3025719459 HTTP/1.1
+Content-Type: application/json
+
+###
+
+# Create offer
+POST {{baseUrl}}/offers HTTP/1.1
+Content-Type: application/json
+
+{
+  "title": "Loft Studio in the Central Area",
+  "description": "Design interior in most sympathetic area! Complitely renovated, well-equipped, cosy studio in idyllic, over 100 years old wooden house. Calm street, fast connection to center and airport.",
+  "date": "2021-05-27T04:10:31.562Z",
+  "city": "Hamburg",
+  "previewImage": "https://9.react.pages.academy/static/hotel/8.jpg",
+  "images": [
+    "https://9.react.pages.academy/static/hotel/2.jpg",
+    "https://9.react.pages.academy/static/hotel/10.jpg",
+    "https://9.react.pages.academy/static/hotel/6.jpg",
+    "https://9.react.pages.academy/static/hotel/7.jpg",
+    "https://9.react.pages.academy/static/hotel/8.jpg",
+    "https://9.react.pages.academy/static/hotel/9.jpg"
+  ],
+  "isPremium": false,
+  "rating": 2.1,
+  "type": "hotel",
+  "bedrooms": 6,
+  "maxGuests": 8,
+  "price": 86289,
+  "goods": [
+    "Baby seat",
+    "Breakfast",
+    "Fridge",
+    "Washer",
+    "Air conditioning",
+    "Laptop friendly workspace"
+  ],
+  "author": "6288a57316071e3025719415",
+  "location": { "latitude": 53.473808, "longitude": 10.04526 }
+}
+
+###
+
+# Update offer
+PUT {{baseUrl}}/offers/6288bb1a26a5f089541fcd1e HTTP/1.1
+Content-Type: application/json
+
+{
+  "title": "Loft Studio in the Central Area",
+  "description": "Design interior in most sympathetic area! Complitely renovated, well-equipped, cosy studio in idyllic, over 100 years old wooden house. Calm street, fast connection to center and airport.",
+  "date": "2021-05-27T04:10:31.562Z",
+  "city": "Hamburg",
+  "previewImage": "https://9.react.pages.academy/static/hotel/8.jpg",
+  "images": [
+    "https://9.react.pages.academy/static/hotel/2.jpg",
+    "https://9.react.pages.academy/static/hotel/10.jpg",
+    "https://9.react.pages.academy/static/hotel/6.jpg",
+    "https://9.react.pages.academy/static/hotel/7.jpg",
+    "https://9.react.pages.academy/static/hotel/8.jpg",
+    "https://9.react.pages.academy/static/hotel/9.jpg"
+  ],
+  "isPremium": false,
+  "rating": 3.5,
+  "type": "hotel",
+  "bedrooms": 6,
+  "maxGuests": 8,
+  "price": 86289,
+  "goods": [
+    "Baby seat",
+    "Breakfast",
+    "Fridge",
+    "Washer",
+    "Air conditioning",
+    "Laptop friendly workspace"
+  ],
+  "author": "6288a57316071e3025719415",
+  "location": { "latitude": 53.473808, "longitude": 10.04526 }
+}
+
+###
+
+# Delete offer
+DELETE {{baseUrl}}/offers/6288bb1a26a5f089541fcd1e HTTP/1.1
+Content-Type: application/json
+
+###
+
+# Get premium offers
+GET {{baseUrl}}/premium HTTP/1.1
 Content-Type: application/json
