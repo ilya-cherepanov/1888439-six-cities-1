@@ -12,6 +12,7 @@ type ConfigSchema = {
   DB_NAME: string;
   DB_USER: string;
   DB_PASSWORD: string;
+  UPLOAD_FILE_DIRECTORY: string;
 };
 
 const configSchema = convict<ConfigSchema>({
@@ -52,10 +53,16 @@ const configSchema = convict<ConfigSchema>({
     default: null,
   },
   DB_PASSWORD: {
-    doc: 'Password',
+    doc: 'Database password',
     format: String,
     env: 'DB_PASSWORD',
     default: null,
+  },
+  UPLOAD_FILE_DIRECTORY: {
+    doc: 'Directory for uploading files',
+    format: String,
+    env: 'UPLOAD_FILE_DIRECTORY',
+    default: 'upload',
   },
 });
 

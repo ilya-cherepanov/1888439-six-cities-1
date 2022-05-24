@@ -14,6 +14,7 @@ import OfferDTO from './dto/offer.dto.js';
 import CreateOfferDTO from './dto/create-offer.dto.js';
 import UpdateOfferDTO from './dto/update-offer.dto.js';
 import ValidateObjectIdMiddleware from '../../common/middlewares/validate-objectid.middleware.js';
+import ValidateDTOMiddleware from '../../common/middlewares/validate-dto.middleware.js';
 
 
 type GetOfferParams = {
@@ -40,6 +41,7 @@ export default class OfferController extends Controller {
       path: '/offers',
       method: HttpMethod.Post,
       handler: this.createOffer,
+      middlewares: [new ValidateDTOMiddleware(CreateOfferDTO)],
     });
     this.addRoute({
       path: '/offers/:offerId',
@@ -51,7 +53,10 @@ export default class OfferController extends Controller {
       path: '/offers/:offerId',
       method: HttpMethod.Put,
       handler: this.updateOffer,
-      middlewares: [new ValidateObjectIdMiddleware('offerId')],
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new ValidateDTOMiddleware(UpdateOfferDTO)
+      ],
     });
     this.addRoute({
       path: '/offers/:offerId',

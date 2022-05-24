@@ -74,6 +74,12 @@ enum UserName {
 }
 
 
+enum Password {
+  MinLength = 6,
+  MaxLength = 12,
+}
+
+
 const IMAGES_COUNT = 6;
 
 const MIN_GOODS = 1;
@@ -83,6 +89,12 @@ const TSV_ARRAY_DELIMITER = ',';
 const DEFAULT_OFFERS_COUNT = 60;
 
 const MAX_PREMIUM_COUNT = 3;
+
+
+const SUPPORTED_IMAGE_FORMATS = [
+  'image/jpeg',
+  'image/png',
+];
 
 
 export {
@@ -95,9 +107,11 @@ export {
   OfferTitle,
   OfferDescription,
   UserName,
+  Password,
   TSV_ARRAY_DELIMITER,
   IMAGES_COUNT,
   MIN_GOODS,
   DEFAULT_OFFERS_COUNT,
   MAX_PREMIUM_COUNT,
+  SUPPORTED_IMAGE_FORMATS,
 };

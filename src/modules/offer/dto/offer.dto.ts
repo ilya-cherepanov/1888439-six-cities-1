@@ -3,6 +3,7 @@ import {Expose, Transform} from 'class-transformer';
 
 export default class OfferDTO {
   @Expose()
+  @Transform((value) => value.obj.id.toString())
   public id!: string;
 
   @Expose()

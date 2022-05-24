@@ -31,6 +31,7 @@ export default class Application {
 
   private registerMiddleware(): void {
     this.expressApp.use(express.json());
+    this.expressApp.use('/upload', express.static(this.config.get('UPLOAD_FILE_DIRECTORY')));
   }
 
   private registerExceptionFilters(): void {
