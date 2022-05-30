@@ -4,7 +4,7 @@ import {inject, injectable} from 'inversify';
 import {ObjectId} from 'mongoose';
 import CreateUserDTO from '../../modules/user/dto/create-user.dto.js';
 import {UserEntity} from '../../modules/user/user.entity.js';
-import {Component} from '../../types/componets.js';
+import {Component} from '../../types/components.js';
 import {LoggerInterface} from '../../common/logger/logger.interface.js';
 import {UserServiceInterface} from '../../modules/user/user-service.interface.js';
 

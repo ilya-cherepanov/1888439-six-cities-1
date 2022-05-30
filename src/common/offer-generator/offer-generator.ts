@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import {Bedrooms, CityLocations, Guests, IMAGES_COUNT, Location, MIN_GOODS, Price, Rating, TSV_ARRAY_DELIMITER} from '../../consts.js';
+import {Bedrooms, CityLocations, Guests, IMAGES_COUNT, Location, MIN_GOODS, Price, OfferRating, TSV_ARRAY_DELIMITER} from '../../consts.js';
 import {City} from '../../types/city.enum.js';
 import {MockData} from '../../types/mock-data.type.js';
 import {getOneRandomArrayElement, getRandomArrayElements, getRandomBool, getRandomFixedPoint, getRandomInt} from '../../utils/random.js';
@@ -17,7 +17,7 @@ export class OfferGenerator implements OfferGeneratorInterface {
     const previewImage = getOneRandomArrayElement(this.mockData.images);
     const images = getRandomArrayElements(this.mockData.images, IMAGES_COUNT).join(TSV_ARRAY_DELIMITER);
     const isPremium = Number(getRandomBool());
-    const rating = getRandomFixedPoint(Rating.Min, Rating.Max, Rating.Precision);
+    const rating = getRandomFixedPoint(OfferRating.Min, OfferRating.Max, OfferRating.Precision);
     const type = getOneRandomArrayElement(this.mockData.housingTypes);
     const bedrooms = getRandomInt(Bedrooms.Min, Bedrooms.Max);
     const maxGuests = getRandomInt(Guests.Min, Guests.Max);

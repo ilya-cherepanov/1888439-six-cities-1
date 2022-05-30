@@ -3,7 +3,7 @@ import {Expose, Transform} from 'class-transformer';
 
 export default class OfferDTO {
   @Expose()
-  @Transform((value) => value.obj.id.toString())
+  @Transform((value) => value.obj._id.toString())
   public id!: string;
 
   @Expose()
@@ -26,6 +26,9 @@ export default class OfferDTO {
 
   @Expose()
   public isPremium!: boolean;
+
+  @Expose()
+  public isFavorite!: boolean;
 
   @Expose()
   public rating!: number;

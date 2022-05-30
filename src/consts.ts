@@ -29,7 +29,7 @@ const CityLocations = {
 } as const;
 
 
-enum Rating {
+enum OfferRating {
   Min = 1,
   Max = 5,
   Precision = 1
@@ -80,6 +80,18 @@ enum Password {
 }
 
 
+enum Comment {
+  MinLength = 5,
+  MaxLength = 1024,
+}
+
+
+enum CommentRating {
+  Min = 1,
+  Max = 5,
+}
+
+
 const IMAGES_COUNT = 6;
 
 const MIN_GOODS = 1;
@@ -90,6 +102,7 @@ const DEFAULT_OFFERS_COUNT = 60;
 
 const MAX_PREMIUM_COUNT = 3;
 
+const MAX_COMMENTS_COUNT = 50;
 
 const SUPPORTED_IMAGE_FORMATS = [
   'image/jpeg',
@@ -99,7 +112,7 @@ const SUPPORTED_IMAGE_FORMATS = [
 
 export {
   CityLocations,
-  Rating,
+  OfferRating,
   Price,
   Bedrooms,
   Guests,
@@ -108,10 +121,13 @@ export {
   OfferDescription,
   UserName,
   Password,
+  CommentRating,
+  Comment,
   TSV_ARRAY_DELIMITER,
   IMAGES_COUNT,
   MIN_GOODS,
   DEFAULT_OFFERS_COUNT,
   MAX_PREMIUM_COUNT,
   SUPPORTED_IMAGE_FORMATS,
+  MAX_COMMENTS_COUNT,
 };

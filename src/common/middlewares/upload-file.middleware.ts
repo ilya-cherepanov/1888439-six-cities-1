@@ -28,7 +28,7 @@ export default class UploadFileMiddleware implements MiddlewareInterface {
     const uploadSingleFileMiddleware = multer({
       storage,
       fileFilter: (_req, file, callback) => {
-        if (!(file.mimetype in SUPPORTED_IMAGE_FORMATS)) {
+        if (!SUPPORTED_IMAGE_FORMATS.includes(file.mimetype)) {
           return callback(new HttpError(
             StatusCodes.BAD_REQUEST,
             'Unsupported image format',

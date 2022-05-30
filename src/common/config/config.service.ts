@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import {config} from 'dotenv';
 import {inject, injectable} from 'inversify';
-import {Component} from '../../types/componets.js';
+import {Component} from '../../types/components.js';
 import {LoggerInterface} from '../logger/logger.interface.js';
 import {ConfigInterface} from './config.interface.js';
 import {configSchema, ConfigSchema} from './config.schema.js';

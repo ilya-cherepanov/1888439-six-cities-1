@@ -15,7 +15,7 @@ import {
   MinLength,
   ValidateNested
 } from 'class-validator';
-import {Bedrooms, Guests, IMAGES_COUNT, OfferDescription, OfferTitle, Rating} from '../../../consts.js';
+import {Bedrooms, Guests, IMAGES_COUNT, OfferDescription, OfferTitle, OfferRating} from '../../../consts.js';
 import {City} from '../../../types/city.enum.js';
 import {Good} from '../../../types/good.enum.js';
 import {HousingType} from '../../../types/housing-type.enum.js';
@@ -57,8 +57,8 @@ export default class UpdateOfferDTO {
 
   @IsOptional()
   @IsNumber({}, {message: 'rating must be of number type'})
-  @Min(Rating.Min, {message: `Minimum rating must be greater than ${Rating.Min}`})
-  @Max(Rating.Max, {message: `Maximum rating must be less than ${Rating.Max}`})
+  @Min(OfferRating.Min, {message: `Minimum rating must be greater than ${OfferRating.Min}`})
+  @Max(OfferRating.Max, {message: `Maximum rating must be less than ${OfferRating.Max}`})
   public rating?: number;
 
   @IsOptional()

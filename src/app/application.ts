@@ -5,7 +5,7 @@ import {ControllerInterface} from '../common/controller/controller.interface.js'
 import {DatabaseInterface} from '../common/database/database.interface.js';
 import {ExceptionFilterInterface} from '../common/errors/exception-filter.interface.js';
 import {LoggerInterface} from '../common/logger/logger.interface.js';
-import {Component} from '../types/componets.js';
+import {Component} from '../types/components.js';
 import {createURI} from '../utils/db.js';
 
 

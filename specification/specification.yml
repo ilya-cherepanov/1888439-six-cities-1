@@ -22,6 +22,15 @@ paths:
       summary: Получить список предложений по аренде
       description: Возвращает массив предложений об аренде. Каждое предложение описано в виде объекта.
       operationId: getOffers
+      parameters:
+        - name: count
+          in: query
+          description: Количество предложений для загрузки с сервера
+          required: false
+          schema:
+            type: integer
+            format: int32
+            example: 10
       responses:
         200:
           description: Массив предложений
@@ -306,6 +315,32 @@ paths:
         400:
           description: Ошибка тела запроса
 
+  /users/{userId}/avatar:
+    post:
+      tags: [user]
+      summary: Загрузка аватара пользователя
+      description: Загружает аватар пользователя на сервер
+      operationId: loadAvatar
+      parameters:
+        - $ref: "#/components/parameters/authToken"
+      requestBody:
+        description: Изображение с аватаром пользователя
+        content:
+          image/jpeg:
+            schema:
+              type: string
+              format: binary
+          image/png:
+            schema:
+              type: string
+              format: binary
+      responses:
+        201:
+          description: Аватар загружен
+        401:
+          description: Пользователь не авторизован
+
+
 
 components:
   schemas:
@@ -415,13 +450,16 @@ components:
       allOf:
         - type: object
           properties:
+            id:
+              type: string
+              example: 62a6ce22dd3c32ba7d9cf32f
             comments:
               type: integer
               format: int32
               example: 4
-            id:
-              type: string
-              example: 62a6ce22dd3c32ba7d9cf32f
+            isFavorite:
+              type: boolean
+              example: false
         - $ref: "#/components/schemas/CreateOffer"
 
     CreateComment:
@@ -430,10 +468,6 @@ components:
         comment:
           type: string
           example: The house is very good, very happy, hygienic and simple living conditions around it are also very good. I hope to have the opportunity to come back. Thank you.
-        date:
-          type: string
-          format: date-time
-          example: "2022-04-03T21:48:13.665Z"
         rating:
           type: number
           format: float
@@ -449,6 +483,10 @@ components:
             id:
               type: string
               example: 62a6ce22dd3c32ba7d9cf32f
+            date:
+              type: string
+              format: date-time
+              example: "2022-04-03T21:48:13.665Z"
         - $ref: "#/components/schemas/CreateComment"
 
     LoginUser:
@@ -476,8 +514,15 @@ components:
               type: string
               format: uri
               example: https://9.react.pages.academy/static/avatar/6.jpg
+            userType:
+              type: string
+              enum:
+                - regular
+                - pro
+              example: pro
           required:
             - name
+            - userType
         - $ref: "#/components/schemas/LoginUser"
 
     User:
@@ -525,9 +570,9 @@ components:
 
     authToken:
       in: header
-      name: X-Token
+      name: Authorization
       description: Аутентификационный токен пользователя
       schema:
         type: string
-        example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
+        example: Bearer T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
       required: true

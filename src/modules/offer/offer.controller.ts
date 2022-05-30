@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import {injectable, inject} from 'inversify';
 import Controller from '../../common/controller/controller.js';
 import {LoggerInterface} from '../../common/logger/logger.interface.js';
-import {Component} from '../../types/componets.js';
+import {Component} from '../../types/components.js';
 import {HttpMethod} from '../../types/http-method.enum.js';
 import {OfferServiceInterface} from './offer-service.interface.js';
 import {Request, Response} from 'express';
@@ -15,6 +15,8 @@ import CreateOfferDTO from './dto/create-offer.dto.js';
 import UpdateOfferDTO from './dto/update-offer.dto.js';
 import ValidateObjectIdMiddleware from '../../common/middlewares/validate-objectid.middleware.js';
 import ValidateDTOMiddleware from '../../common/middlewares/validate-dto.middleware.js';
+import DocumentExistsMiddleware from '../../common/middlewares/document-exists.middleware.js';
+import {FavoriteServiceInterface} from '../favorite/favorite-service.interface.js';
 
 
 type GetOfferParams = {
@@ -25,8 +27,9 @@ type GetOfferParams = {
 @injectable()
 export default class OfferController extends Controller {
   constructor(
-    @inject(Component.LoggerInterface) logger: LoggerInterface,
-    @inject(Component.OfferServiceInterface) public readonly offerService: OfferServiceInterface,
+    @inject(Component.LoggerInterface) protected readonly logger: LoggerInterface,
+    @inject(Component.OfferServiceInterface) private readonly offerService: OfferServiceInterface,
+    @inject(Component.FavoriteServiceInterface) private readonly favoriteService: FavoriteServiceInterface,
   ) {
     super(logger);
 
@@ -47,7 +50,10 @@ export default class OfferController extends Controller {
       path: '/offers/:offerId',
       method: HttpMethod.Get,
       handler: this.getOneOffer,
-      middlewares: [new ValidateObjectIdMiddleware('offerId')],
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
+      ],
     });
     this.addRoute({
       path: '/offers/:offerId',
@@ -87,8 +93,14 @@ export default class OfferController extends Controller {
   ): Promise<void> {
     const count = this.extractCount(req);
     const offers = await this.offerService.findAll(count);
+    const extendedOffers = await Promise.all(offers.map(
+      async (offer) => ({
+        ...offer.toObject(),
+        isFavorite: await this.favoriteService.getFavoriteStatus(offer.id, null),
+      })
+    ));
 
-    this.send(res, StatusCodes.OK, fillDTO(OfferDTO, offers));
+    this.send(res, StatusCodes.OK, fillDTO(OfferDTO, extendedOffers));
   }
 
   public async createOffer(
@@ -96,62 +108,59 @@ export default class OfferController extends Controller {
     res: Response,
   ): Promise<void> {
     const newOffer = await this.offerService.create(body);
+    const extendedOffer = {
+      ...newOffer.toObject(),
+      isFavorite: false,
+    };
 
-    this.ok(res, fillDTO(OfferDTO, newOffer));
+    this.ok(res, fillDTO(OfferDTO, extendedOffer));
   }
 
-  public async getOneOffer(req: Request<GetOfferParams>, res: Response): Promise<void> {
-    const {offerId} = req.params;
+  public async getOneOffer(
+    {params: {offerId}}: Request<GetOfferParams>,
+    res: Response
+  ): Promise<void> {
     const offer = await this.offerService.findById(offerId);
+    const extendedOffer = {
+      ...offer?.toObject(),
+      isFavorite: await this.favoriteService.getFavoriteStatus(offer?.id, null)
+    };
 
-    if (!offer) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Offer with id ${offerId} not found.`,
-        'OfferController'
-      );
-    }
-
-    this.ok(res, fillDTO(OfferDTO, offer));
+    this.ok(res, fillDTO(OfferDTO, extendedOffer));
   }
 
   public async updateOffer(
-    req: Request<GetOfferParams, unknown, UpdateOfferDTO>,
+    {params: {offerId}, body}: Request<GetOfferParams, unknown, UpdateOfferDTO>,
     res: Response,
   ): Promise<void> {
-    const {offerId} = req.params;
-    const updatedOffer = await this.offerService.updateById(offerId, req.body);
+    const updatedOffer = await this.offerService.updateById(offerId, body);
+    const extendedOffer = {
+      ...updatedOffer?.toObject(),
+      isFavorite: await this.favoriteService.getFavoriteStatus(updatedOffer?.id, null)
+    };
 
-    if (!updatedOffer) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Offer with id ${offerId} not found.`,
-        'OfferController'
-      );
-    }
-
-    this.ok(res, fillDTO(OfferDTO, updatedOffer));
+    this.ok(res, fillDTO(OfferDTO, extendedOffer));
   }
 
-  public async deleteOffer(req: Request<GetOfferParams>, res: Response): Promise<void> {
-    const {offerId} = req.params;
-    const offer = await this.offerService.deleteById(offerId);
-
-    if (!offer) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Offer with id ${offerId} not found.`,
-        'OfferController'
-      );
-    }
+  public async deleteOffer(
+    {params: {offerId}}: Request<GetOfferParams>,
+    res: Response
+  ): Promise<void> {
+    await this.offerService.deleteById(offerId);
 
     this.noContent(res);
   }
 
   public async getPremiumOffers(_req: Request, res: Response): Promise<void> {
     const offers = await this.offerService.findPremium(MAX_PREMIUM_COUNT);
+    const extendedOffers = await Promise.all(offers.map(
+      async (offer) => ({
+        ...offer.toObject(),
+        isFavorite: await this.favoriteService.getFavoriteStatus(offer.id, null),
+      })
+    ));
 
-    this.ok(res, fillDTO(OfferDTO, offers));
+    this.ok(res, fillDTO(OfferDTO, extendedOffers));
   }
 
   public async getFavoriteOffers(_req: Request, _res: Response): Promise<void> {

@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import {inject, injectable} from 'inversify';
-import {Component} from '../../types/componets.js';
+import {Component} from '../../types/components.js';
 import {LoggerInterface} from '../logger/logger.interface.js';
 import {DatabaseInterface} from './database.interface.js';
 import mongoose from 'mongoose';

@@ -13,11 +13,6 @@ export default class ValidateDTOMiddleware implements MiddlewareInterface {
     const errors = await validate(dtoInstance);
 
     if (errors.length > 0) {
-      // throw new HttpError(
-      //   StatusCodes.BAD_REQUEST,
-      //   JSON.stringify(errors),
-      //   'ValidateDTOMiddleware'
-      // );
       res.status(StatusCodes.BAD_REQUEST).send(errors);
       return;
     }

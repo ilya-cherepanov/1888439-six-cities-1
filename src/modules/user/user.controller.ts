@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import {inject, injectable} from 'inversify';
 import Controller from '../../common/controller/controller.js';
-import {Component} from '../../types/componets.js';
+import {Component} from '../../types/components.js';
 import {LoggerInterface} from '../../common/logger/logger.interface.js';
 import {HttpMethod} from '../../types/http-method.enum.js';
 import {Request, Response} from 'express';
