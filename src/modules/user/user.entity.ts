@@ -61,6 +61,12 @@ class UserEntity extends defaultClasses.TimeStamps {
   public getPassword(): string {
     return this.password;
   }
+
+  public verifyPassword(password: string, salt: string) {
+    const passwordHash = getSHA256(password, salt);
+
+    return passwordHash === this.password;
+  }
 }
 
 

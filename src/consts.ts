@@ -109,6 +109,8 @@ const SUPPORTED_IMAGE_FORMATS = [
   'image/png',
 ];
 
+const JWT_ALGORITHM = 'HS256';
+
 
 export {
   CityLocations,
@@ -130,4 +132,5 @@ export {
   MAX_PREMIUM_COUNT,
   SUPPORTED_IMAGE_FORMATS,
   MAX_COMMENTS_COUNT,
+  JWT_ALGORITHM,
 };

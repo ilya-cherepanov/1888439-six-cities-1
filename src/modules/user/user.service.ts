@@ -7,6 +7,7 @@ import {UserEntity} from '../../modules/user/user.entity.js';
 import {Component} from '../../types/components.js';
 import {LoggerInterface} from '../../common/logger/logger.interface.js';
 import {UserServiceInterface} from '../../modules/user/user-service.interface.js';
+import LoginUserDTO from './dto/login-user.dto.js';
 
 
 @injectable()
@@ -26,7 +27,7 @@ export default class UserService implements UserServiceInterface {
     return result;
   }
 
-  public async findById(id: ObjectId): Promise<DocumentType<UserEntity> | null> {
+  public async findById(id: ObjectId | string): Promise<DocumentType<UserEntity> | null> {
     return this.userModel.findById(id).exec();
   }
 
@@ -42,5 +43,15 @@ export default class UserService implements UserServiceInterface {
     }
 
     return this.create(dto, salt);
+  }
+
+  public async verifyUser(dto: LoginUserDTO, salt: string): Promise<DocumentType<UserEntity> | null> {
+    const user = await this.findByEmail(dto.email);
+
+    if (user?.verifyPassword(dto.password, salt)) {
+      return user;
+    }
+
+    return null;
   }
 }

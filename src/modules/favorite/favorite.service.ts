@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import {ReturnModelType} from '@typegoose/typegoose';
+import {DocumentType, ReturnModelType} from '@typegoose/typegoose';
 import {ObjectId} from 'mongoose';
 import {FavoriteServiceInterface} from './favorite-service.interface.js';
 import {FavoriteEntity} from './favorite.entity.js';
@@ -25,11 +25,17 @@ export default class FavoriteService implements FavoriteServiceInterface {
     offerId: string | ObjectId,
     userId: string | ObjectId,
     status: boolean,
-  ): Promise<void> {
+  ): Promise<boolean> {
     if (status) {
       await this.favoriteModel.create({user: userId, offer: offerId});
-    } else {
-      await this.favoriteModel.findOneAndDelete({user: userId, offer: offerId}).exec();
+      return true;
     }
+
+    await this.favoriteModel.findOneAndDelete({user: userId, offer: offerId}).exec();
+    return false;
+  }
+
+  public async getFavorites(userId: string | ObjectId): Promise<DocumentType<FavoriteEntity>[]> {
+    return this.favoriteModel.find({user: userId}).populate('offer').exec();
   }
 }

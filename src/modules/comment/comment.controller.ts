@@ -12,6 +12,8 @@ import {OfferServiceInterface} from '../offer/offer-service.interface.js';
 import DocumentExistsMiddleware from '../../common/middlewares/document-exists.middleware.js';
 import {fillDTO} from '../../utils/other.js';
 import CommentDTO from './dto/comment.dto.js';
+import PrivateRouteMiddleware from '../../common/middlewares/private-route.middleware.js';
+import InjectUserIdMiddleware from '../../common/middlewares/inject-user.middleware.js';
 
 
 type GetCommentsParams = {
@@ -39,11 +41,14 @@ export default class CommentController extends Controller {
         new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
       ],
     });
+
     this.addRoute({
       path: '/offers/:offerId/comments',
       method: HttpMethod.Post,
       handler: this.createComment,
       middlewares: [
+        new PrivateRouteMiddleware(),
+        new InjectUserIdMiddleware('author'),
         new ValidateObjectIdMiddleware('offerId'),
         new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
       ],

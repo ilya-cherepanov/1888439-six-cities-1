@@ -5,6 +5,7 @@ import {ControllerInterface} from '../common/controller/controller.interface.js'
 import {DatabaseInterface} from '../common/database/database.interface.js';
 import {ExceptionFilterInterface} from '../common/errors/exception-filter.interface.js';
 import {LoggerInterface} from '../common/logger/logger.interface.js';
+import AuthenticateMiddleware from '../common/middlewares/authenticate.middleware.js';
 import {Component} from '../types/components.js';
 import {createURI} from '../utils/db.js';
 
@@ -32,6 +33,9 @@ export default class Application {
   private registerMiddleware(): void {
     this.expressApp.use(express.json());
     this.expressApp.use('/upload', express.static(this.config.get('UPLOAD_FILE_DIRECTORY')));
+
+    const authenticateMiddleware = new AuthenticateMiddleware(this.config.get('JWT_SECRET'));
+    this.expressApp.use(authenticateMiddleware.execute.bind(authenticateMiddleware));
   }
 
   private registerExceptionFilters(): void {

@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import * as jose from 'jose';
 
 
 const getSHA256 = (line: string, salt: string): string => {
@@ -7,4 +8,13 @@ const getSHA256 = (line: string, salt: string): string => {
 };
 
 
-export {getSHA256};
+const createJWT = async (algorithm: string, jwtSecret: string, payload: object): Promise<string> => (
+  new jose.SignJWT({...payload})
+    .setProtectedHeader({alg: algorithm})
+    .setIssuedAt()
+    .setExpirationTime('2d')
+    .sign(crypto.createSecretKey(jwtSecret, 'utf-8'))
+);
+
+
+export {getSHA256, createJWT};

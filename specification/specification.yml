@@ -283,18 +283,6 @@ paths:
         401:
           description: Токен не валиден
 
-  /logout:
-    delete:
-      tags: [user]
-      summary: Завершение пользовательского сеанса
-      description: Завершает пользовательский сеанс
-      operationId: userLogout
-      parameters:
-        - $ref: "#/components/parameters/authToken"
-      responses:
-        204:
-          description: Сеанс завершен
-
   /sign-up:
     post:
       tags: [user]

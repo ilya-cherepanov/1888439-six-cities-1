@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import typegoose from '@typegoose/typegoose';
 import {injectable, inject} from 'inversify';
 import Controller from '../../common/controller/controller.js';
 import {LoggerInterface} from '../../common/logger/logger.interface.js';
@@ -8,7 +9,6 @@ import {OfferServiceInterface} from './offer-service.interface.js';
 import {Request, Response} from 'express';
 import {DEFAULT_OFFERS_COUNT, MAX_PREMIUM_COUNT} from '../../consts.js';
 import {StatusCodes} from 'http-status-codes';
-import HttpError from '../../common/errors/http-error.js';
 import {fillDTO} from '../../utils/other.js';
 import OfferDTO from './dto/offer.dto.js';
 import CreateOfferDTO from './dto/create-offer.dto.js';
@@ -17,10 +17,16 @@ import ValidateObjectIdMiddleware from '../../common/middlewares/validate-object
 import ValidateDTOMiddleware from '../../common/middlewares/validate-dto.middleware.js';
 import DocumentExistsMiddleware from '../../common/middlewares/document-exists.middleware.js';
 import {FavoriteServiceInterface} from '../favorite/favorite-service.interface.js';
+import PrivateRouteMiddleware from '../../common/middlewares/private-route.middleware.js';
+import CheckOfferOwnerMiddleware from '../../common/middlewares/check-offer-owner.middleware.js';
+import InjectUserIdMiddleware from '../../common/middlewares/inject-user.middleware.js';
+
+
+const {isDocument} = typegoose;
 
 
 type GetOfferParams = {
-  offerId: string
+  offerId: string;
 };
 
 
@@ -40,12 +46,18 @@ export default class OfferController extends Controller {
       method: HttpMethod.Get,
       handler: this.getOffers
     });
+
     this.addRoute({
       path: '/offers',
       method: HttpMethod.Post,
       handler: this.createOffer,
-      middlewares: [new ValidateDTOMiddleware(CreateOfferDTO)],
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new InjectUserIdMiddleware('author'),
+        new ValidateDTOMiddleware(CreateOfferDTO),
+      ],
     });
+
     this.addRoute({
       path: '/offers/:offerId',
       method: HttpMethod.Get,
@@ -55,35 +67,53 @@ export default class OfferController extends Controller {
         new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
       ],
     });
+
     this.addRoute({
       path: '/offers/:offerId',
       method: HttpMethod.Put,
       handler: this.updateOffer,
       middlewares: [
+        new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('offerId'),
-        new ValidateDTOMiddleware(UpdateOfferDTO)
+        new InjectUserIdMiddleware('author'),
+        new CheckOfferOwnerMiddleware(this.offerService),
+        new ValidateDTOMiddleware(UpdateOfferDTO),
       ],
     });
+
     this.addRoute({
       path: '/offers/:offerId',
       method: HttpMethod.Delete,
       handler: this.deleteOffer,
-      middlewares: [new ValidateObjectIdMiddleware('offerId')],
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateObjectIdMiddleware('offerId'),
+        new CheckOfferOwnerMiddleware(this.offerService),
+      ],
     });
+
     this.addRoute({
       path: '/premium',
       method: HttpMethod.Get,
       handler: this.getPremiumOffers,
     });
+
     this.addRoute({
       path: '/favorites',
       method: HttpMethod.Get,
       handler: this.getFavoriteOffers,
+      middlewares: [new PrivateRouteMiddleware(),],
     });
+
     this.addRoute({
       path: '/favorites/:offerId/:status',
       method: HttpMethod.Post,
       handler: this.changeFavoriteStatus,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
+      ],
     });
   }
 
@@ -93,10 +123,11 @@ export default class OfferController extends Controller {
   ): Promise<void> {
     const count = this.extractCount(req);
     const offers = await this.offerService.findAll(count);
+
     const extendedOffers = await Promise.all(offers.map(
       async (offer) => ({
         ...offer.toObject(),
-        isFavorite: await this.favoriteService.getFavoriteStatus(offer.id, null),
+        isFavorite: await this.favoriteService.getFavoriteStatus(offer.id, req?.user?.id),
       })
     ));
 
@@ -108,6 +139,7 @@ export default class OfferController extends Controller {
     res: Response,
   ): Promise<void> {
     const newOffer = await this.offerService.create(body);
+
     const extendedOffer = {
       ...newOffer.toObject(),
       isFavorite: false,
@@ -117,26 +149,27 @@ export default class OfferController extends Controller {
   }
 
   public async getOneOffer(
-    {params: {offerId}}: Request<GetOfferParams>,
+    {params: {offerId}, ...req}: Request<GetOfferParams>,
     res: Response
   ): Promise<void> {
     const offer = await this.offerService.findById(offerId);
+
     const extendedOffer = {
       ...offer?.toObject(),
-      isFavorite: await this.favoriteService.getFavoriteStatus(offer?.id, null)
+      isFavorite: await this.favoriteService.getFavoriteStatus(offer?.id, req?.user?.id)
     };
 
     this.ok(res, fillDTO(OfferDTO, extendedOffer));
   }
 
   public async updateOffer(
-    {params: {offerId}, body}: Request<GetOfferParams, unknown, UpdateOfferDTO>,
+    {params: {offerId}, body, ...req}: Request<GetOfferParams, unknown, UpdateOfferDTO>,
     res: Response,
   ): Promise<void> {
     const updatedOffer = await this.offerService.updateById(offerId, body);
     const extendedOffer = {
       ...updatedOffer?.toObject(),
-      isFavorite: await this.favoriteService.getFavoriteStatus(updatedOffer?.id, null)
+      isFavorite: await this.favoriteService.getFavoriteStatus(updatedOffer?.id, req?.user?.id)
     };
 
     this.ok(res, fillDTO(OfferDTO, extendedOffer));
@@ -153,6 +186,7 @@ export default class OfferController extends Controller {
 
   public async getPremiumOffers(_req: Request, res: Response): Promise<void> {
     const offers = await this.offerService.findPremium(MAX_PREMIUM_COUNT);
+
     const extendedOffers = await Promise.all(offers.map(
       async (offer) => ({
         ...offer.toObject(),
@@ -163,12 +197,37 @@ export default class OfferController extends Controller {
     this.ok(res, fillDTO(OfferDTO, extendedOffers));
   }
 
-  public async getFavoriteOffers(_req: Request, _res: Response): Promise<void> {
-    throw new HttpError(StatusCodes.NOT_IMPLEMENTED, 'Not implemented!', 'OfferController');
+  public async getFavoriteOffers({user}: Request, res: Response): Promise<void> {
+    const favorites = await this.favoriteService.getFavorites(user.id);
+
+    const extendedOffers = favorites.map((favorite) => {
+      if (isDocument(favorite.offer)) {
+        return {
+          ...favorite.offer.toObject(),
+          isFavorite: true,
+        };
+      }
+
+      return null;
+    });
+
+    this.ok(res, fillDTO(OfferDTO, extendedOffers));
   }
 
-  public async changeFavoriteStatus(_req: Request, _res: Response): Promise<void> {
-    throw new HttpError(StatusCodes.NOT_IMPLEMENTED, 'Not implemented!', 'OfferController');
+  public async changeFavoriteStatus(
+    {params: {offerId, status}, user}: Request<GetOfferParams & {status: string}>,
+    res: Response
+  ): Promise<void> {
+    const newStatus = await this.favoriteService.setFavoriteStatus(
+      offerId,
+      user.id,
+      Boolean(parseInt(status, 10)),
+    );
+
+    const offer = await this.offerService.findById(offerId);
+    const extendedOffer = {...offer?.toObject(), isFavorite: newStatus};
+
+    this.ok(res, fillDTO(OfferDTO, extendedOffer));
   }
 
   private extractCount({query}: Request<unknown, unknown, unknown, {count?: string}>): number {
