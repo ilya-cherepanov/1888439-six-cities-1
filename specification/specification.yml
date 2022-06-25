@@ -261,7 +261,7 @@ paths:
           description: Аутентификационный токен
           content:
             application/json:
-             schema: {$ref: "#/components/schemas/AuthorizationToken"}
+             schema: {$ref: "#/components/schemas/LoggedInUser"}
         400:
           description: Ошибка тела запроса
         401:
@@ -299,7 +299,7 @@ paths:
           description: Пользователь создан
           content:
             application/json:
-              schema: {$ref: "#/components/schemas/AuthorizedUser"}
+              schema: {$ref: "#/components/schemas/CreatedUser"}
         400:
           description: Ошибка тела запроса
 
@@ -325,6 +325,9 @@ paths:
       responses:
         201:
           description: Аватар загружен
+          content:
+            application/json:
+              schema: {$ref: "#/components/schemas/UserAvatar"}
         401:
           description: Пользователь не авторизован
 
@@ -341,10 +344,6 @@ components:
         description:
           type: string
           example: Peaceful studio in the most wanted area in town. Quiet house Near of everything. Completely renovated. Lovely neighbourhood, lot of trendy shops, restaurants and bars in a walking distance.
-        date:
-          type: string
-          format: date-time
-          example: "2022-04-03T21:48:13.665Z"
         city:
           type: string
           enum:
@@ -376,10 +375,6 @@ components:
         isPremium:
           type: boolean
           example: true
-        rating:
-          type: number
-          format: float
-          example: 3.8
         type:
           type: string
           enum:
@@ -416,9 +411,6 @@ components:
             - Breakfast
             - Baby seat
             - Washer
-        author:
-          type: string
-          example: 6276ce22dd3c27ba7d0cfddf
         location:
           type: object
           properties:
@@ -441,6 +433,14 @@ components:
             id:
               type: string
               example: 62a6ce22dd3c32ba7d9cf32f
+            date:
+              type: string
+              format: date-time
+              example: "2022-04-03T21:48:13.665Z"
+            rating:
+              type: number
+              format: float
+              example: 3.8
             comments:
               type: integer
               format: int32
@@ -448,6 +448,8 @@ components:
             isFavorite:
               type: boolean
               example: false
+            author:
+              $ref: "#/components/schemas/User"
         - $ref: "#/components/schemas/CreateOffer"
 
     CreateComment:
@@ -460,9 +462,6 @@ components:
           type: number
           format: float
           example: 4.2
-        author:
-          type: string
-          example: 6276ce22dd3c27ba7d0cfddf
 
     Comment:
       allOf:
@@ -475,21 +474,29 @@ components:
               type: string
               format: date-time
               example: "2022-04-03T21:48:13.665Z"
+            author:
+              $ref: "#/components/schemas/User"
         - $ref: "#/components/schemas/CreateComment"
 
-    LoginUser:
+    Email:
       type: object
       properties:
         email:
           type: string
           format: email
           example: user@mail.com
-        password:
-          type: string
-          format: password
-      required:
-        - email
-        - password
+
+    LoginUser:
+      allOf:
+        - type: object
+          properties:
+            password:
+              type: string
+              format: password
+          required:
+            - email
+            - password
+        - $ref: "#/components/schemas/Email"
 
     CreateUser:
       allOf:
@@ -498,10 +505,6 @@ components:
             name:
               type: string
               example: John.Connor
-            avatar:
-              type: string
-              format: uri
-              example: https://9.react.pages.academy/static/avatar/6.jpg
             userType:
               type: string
               enum:
@@ -512,6 +515,29 @@ components:
             - name
             - userType
         - $ref: "#/components/schemas/LoginUser"
+
+
+    LoggedInUser:
+      allOf:
+        - $ref: "#/components/schemas/AuthorizationToken"
+        - $ref: "#/components/schemas/Email"
+
+    CreatedUser:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: string
+              example: 62a6ce22dd3c32ba7d9cf32f
+        - $ref: "#/components/schemas/Email"
+
+    UserAvatar:
+      type: object
+      properties:
+        avatar:
+          type: string
+          format: uri
+          example: https://9.react.pages.academy/static/avatar/6.jpg
 
     User:
       type: object
@@ -533,6 +559,10 @@ components:
             - regular
             - pro
           example: pro
+      required:
+        - name
+        - email
+        - userType
 
     AuthorizationToken:
       type: object
@@ -540,11 +570,6 @@ components:
         token:
           type: string
           example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
-
-    AuthorizedUser:
-      allOf:
-        - $ref: "#/components/schemas/AuthorizationToken"
-        - $ref: "#/components/schemas/User"
 
   parameters:
     offerId:

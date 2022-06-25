@@ -19,17 +19,19 @@ import ValidateDTOMiddleware from '../../common/middlewares/validate-dto.middlew
 import {createJWT} from '../../utils/cryptography.js';
 import {JWT_ALGORITHM} from '../../consts.js';
 import PrivateRouteMiddleware from '../../common/middlewares/private-route.middleware.js';
-import CheckUploadAvatarAccessMiddleware from '../../common/middlewares/check-upload-avatar-access.middleware.js';
+// import CheckUploadAvatarAccessMiddleware from '../../common/middlewares/check-upload-avatar-access.middleware.js';
+import CreatedUserDTO from './dto/created-user.dto.js';
+import UploadUserAvatarDTO from './dto/upload-user-avatar.dto.js';
 
 
 @injectable()
 export default class UserController extends Controller {
   constructor(
-    @inject(Component.LoggerInterface) logger: LoggerInterface,
     @inject(Component.UserServiceInterface) private readonly userService: UserService,
-    @inject(Component.ConfigInterface) private readonly config: ConfigService
+    @inject(Component.LoggerInterface) logger: LoggerInterface,
+    @inject(Component.ConfigInterface) config: ConfigService
   ) {
-    super(logger);
+    super(logger, config);
 
     this.logger.info('Register routes for UserController…');
 
@@ -59,8 +61,8 @@ export default class UserController extends Controller {
       method: HttpMethod.Post,
       handler: this.uploadAvatar,
       middlewares: [
-        new PrivateRouteMiddleware(),
-        new CheckUploadAvatarAccessMiddleware(),
+        // new PrivateRouteMiddleware(),
+        // new CheckUploadAvatarAccessMiddleware(),
         new ValidateObjectIdMiddleware('userId'),
         new UploadFileMiddleware(this.config.get('UPLOAD_FILE_DIRECTORY'), 'avatar'),
       ],
@@ -107,13 +109,14 @@ export default class UserController extends Controller {
       throw new HttpError(StatusCodes.BAD_REQUEST, errorMessage, 'UserController');
     }
 
-    const result = await this.userService.create(body, this.config.get('SALT'));
-    this.created(res, fillDTO(UserDTO, result));
+    const createdUser = await this.userService.create(body, this.config.get('SALT'));
+    this.created(res, fillDTO(CreatedUserDTO, createdUser));
   }
 
-  public async uploadAvatar(req: Request, res: Response): Promise<void> {
-    this.created(res, {
-      filepath: req.file?.path,
-    });
+  public async uploadAvatar({params: {userId}, ...req}: Request<{userId: string}>, res: Response): Promise<void> {
+    const uploadedFile = {avatar: req.file?.filename};
+    await this.userService.updateById(userId, uploadedFile);
+
+    this.created(res, fillDTO(UploadUserAvatarDTO, uploadedFile));
   }
 }

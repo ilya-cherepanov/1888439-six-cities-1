@@ -2,11 +2,8 @@ import {
   ArrayMaxSize,
   ArrayMinSize,
   IsBoolean,
-  IsDateString,
   IsEnum,
   IsInt,
-  IsMongoId,
-  IsNumber,
   IsOptional,
   IsUrl,
   Max,
@@ -15,7 +12,7 @@ import {
   MinLength,
   ValidateNested
 } from 'class-validator';
-import {Bedrooms, Guests, IMAGES_COUNT, OfferDescription, OfferTitle, OfferRating} from '../../../consts.js';
+import {Bedrooms, Guests, IMAGES_COUNT, OfferDescription, OfferTitle} from '../../../consts.js';
 import {City} from '../../../types/city.enum.js';
 import {Good} from '../../../types/good.enum.js';
 import {HousingType} from '../../../types/housing-type.enum.js';
@@ -34,10 +31,6 @@ export default class UpdateOfferDTO {
   public description?: string;
 
   @IsOptional()
-  @IsDateString({}, {message: 'date must be valid ISO date'})
-  public date?: Date;
-
-  @IsOptional()
   @IsEnum(City, {message: 'city must be of City type'})
   public city?: City;
 
@@ -54,12 +47,6 @@ export default class UpdateOfferDTO {
   @IsOptional()
   @IsBoolean({message: 'isPremium must be of boolean type'})
   public isPremium?: boolean;
-
-  @IsOptional()
-  @IsNumber({}, {message: 'rating must be of number type'})
-  @Min(OfferRating.Min, {message: `Minimum rating must be greater than ${OfferRating.Min}`})
-  @Max(OfferRating.Max, {message: `Maximum rating must be less than ${OfferRating.Max}`})
-  public rating?: number;
 
   @IsOptional()
   @IsEnum(HousingType, {message: 'type must be of HousingType type'})
@@ -84,10 +71,6 @@ export default class UpdateOfferDTO {
   @IsOptional()
   @IsEnum(Good, {each: true, message: 'goods must be of Good[] type'})
   public goods?: Good[];
-
-  @IsOptional()
-  @IsMongoId({message: 'author must be of MongoId type'})
-  public author?: string;
 
   @IsOptional()
   @ValidateNested()

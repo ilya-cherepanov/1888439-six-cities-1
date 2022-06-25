@@ -1,3 +1,4 @@
+import cors from 'cors';
 import express from 'express';
 import {inject, injectable} from 'inversify';
 import {ConfigInterface} from '../common/config/config.interface.js';
@@ -8,6 +9,7 @@ import {LoggerInterface} from '../common/logger/logger.interface.js';
 import AuthenticateMiddleware from '../common/middlewares/authenticate.middleware.js';
 import {Component} from '../types/components.js';
 import {createURI} from '../utils/db.js';
+import {getFullServerPath} from '../utils/other.js';
 
 
 @injectable()
@@ -31,8 +33,10 @@ export default class Application {
   }
 
   private registerMiddleware(): void {
+    this.expressApp.use(cors());
     this.expressApp.use(express.json());
     this.expressApp.use('/upload', express.static(this.config.get('UPLOAD_FILE_DIRECTORY')));
+    this.expressApp.use('/static', express.static(this.config.get('STATIC_FILE_PATH')));
 
     const authenticateMiddleware = new AuthenticateMiddleware(this.config.get('JWT_SECRET'));
     this.expressApp.use(authenticateMiddleware.execute.bind(authenticateMiddleware));
@@ -59,6 +63,6 @@ export default class Application {
     this.registerRoutes();
     this.registerExceptionFilters();
     this.expressApp.listen(this.config.get('PORT'));
-    this.logger.info(`Server started on http://localhost:${this.config.get('PORT')}`);
+    this.logger.info(`Server started on ${getFullServerPath(this.config.get('HOST'), this.config.get('PORT'))}`);
   }
 }

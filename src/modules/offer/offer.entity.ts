@@ -12,6 +12,8 @@ const {modelOptions, prop} = typegoose;
 @modelOptions({
   schemaOptions: {
     collection: 'offers',
+    toJSON: {virtuals: true},
+    toObject: {virtuals: true},
   }
 })
 class OfferEntity extends defaultClasses.TimeStamps {
@@ -34,12 +36,6 @@ class OfferEntity extends defaultClasses.TimeStamps {
     default: '',
   })
   public description!: string;
-
-  @prop({
-    required: true,
-    default: new Date(),
-  })
-  public date!: Date;
 
   @prop({
     required: true,
@@ -69,7 +65,7 @@ class OfferEntity extends defaultClasses.TimeStamps {
 
   @prop({
     required: true,
-    min: OfferRating.Min,
+    min: 0,
     max: OfferRating.Max,
     default: 0,
   })
@@ -138,6 +134,10 @@ class OfferEntity extends defaultClasses.TimeStamps {
     latitude: number;
     longitude: number;
   };
+
+  public get date() {
+    return this.createdAt;
+  }
 }
 
 

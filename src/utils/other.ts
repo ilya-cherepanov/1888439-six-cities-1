@@ -6,7 +6,7 @@ const fillDTO = <T, U>(DTO: ClassConstructor<T>, plainObject: U) => (
 );
 
 
-const createErrorObject = (message: string) => ({error: message});
+const getFullServerPath = (host: string, port: number) => `http://${host}:${port}`;
 
 
-export {createErrorObject, fillDTO};
+export {fillDTO, getFullServerPath};

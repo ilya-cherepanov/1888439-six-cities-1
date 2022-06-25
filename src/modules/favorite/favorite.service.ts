@@ -27,7 +27,12 @@ export default class FavoriteService implements FavoriteServiceInterface {
     status: boolean,
   ): Promise<boolean> {
     if (status) {
-      await this.favoriteModel.create({user: userId, offer: offerId});
+      const favorite = await this.favoriteModel.findOne({user: userId, offer: offerId}).exec();
+
+      if (!favorite) {
+        await this.favoriteModel.create({user: userId, offer: offerId});
+      }
+
       return true;
     }
 
@@ -37,5 +42,11 @@ export default class FavoriteService implements FavoriteServiceInterface {
 
   public async getFavorites(userId: string | ObjectId): Promise<DocumentType<FavoriteEntity>[]> {
     return this.favoriteModel.find({user: userId}).populate('offer').exec();
+  }
+
+  public async deleteByOfferId(offerId: string | ObjectId): Promise<number> {
+    const result = await this.favoriteModel.deleteMany({offer: offerId}).exec();
+
+    return result.deletedCount;
   }
 }

@@ -1,4 +1,5 @@
-import {Expose, Transform} from 'class-transformer';
+import {Expose, Transform, Type} from 'class-transformer';
+import UserDTO from '../../user/dto/user.dto.js';
 
 
 export default class OfferDTO {
@@ -49,8 +50,8 @@ export default class OfferDTO {
   public goods!: string[];
 
   @Expose()
-  @Transform((value) => value.obj.author.toString())
-  public author!: string;
+  @Type(() => UserDTO)
+  public author!: UserDTO;
 
   @Expose()
   public comments!: number;

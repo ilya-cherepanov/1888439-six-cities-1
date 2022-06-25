@@ -67,8 +67,15 @@ export default class ImportCommand implements CliCommandInterface {
       this.configService.get('SALT')
     );
 
-    await this.offerService.create({
+    const {date, ...newOffer} = {
       ...offer,
+      createdAt: offer.date,
+      updatedAt: offer.date,
+    };
+
+
+    await this.offerService.create({
+      ...newOffer,
       author: user.id
     });
   }

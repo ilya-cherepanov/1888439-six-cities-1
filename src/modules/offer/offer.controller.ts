@@ -8,7 +8,6 @@ import {HttpMethod} from '../../types/http-method.enum.js';
 import {OfferServiceInterface} from './offer-service.interface.js';
 import {Request, Response} from 'express';
 import {DEFAULT_OFFERS_COUNT, MAX_PREMIUM_COUNT} from '../../consts.js';
-import {StatusCodes} from 'http-status-codes';
 import {fillDTO} from '../../utils/other.js';
 import OfferDTO from './dto/offer.dto.js';
 import CreateOfferDTO from './dto/create-offer.dto.js';
@@ -20,6 +19,8 @@ import {FavoriteServiceInterface} from '../favorite/favorite-service.interface.j
 import PrivateRouteMiddleware from '../../common/middlewares/private-route.middleware.js';
 import CheckOfferOwnerMiddleware from '../../common/middlewares/check-offer-owner.middleware.js';
 import InjectUserIdMiddleware from '../../common/middlewares/inject-user.middleware.js';
+import {ConfigInterface} from '../../common/config/config.interface.js';
+import { CommentServiceInterface } from '../comment/comment-service.interface.js';
 
 
 const {isDocument} = typegoose;
@@ -33,11 +34,13 @@ type GetOfferParams = {
 @injectable()
 export default class OfferController extends Controller {
   constructor(
-    @inject(Component.LoggerInterface) protected readonly logger: LoggerInterface,
     @inject(Component.OfferServiceInterface) private readonly offerService: OfferServiceInterface,
     @inject(Component.FavoriteServiceInterface) private readonly favoriteService: FavoriteServiceInterface,
+    @inject(Component.CommentServiceInterface) private readonly commentService: CommentServiceInterface,
+    @inject(Component.LoggerInterface) logger: LoggerInterface,
+    @inject(Component.ConfigInterface) config: ConfigInterface,
   ) {
-    super(logger);
+    super(logger, config);
 
     this.logger.info('Register routes for OfferController…');
 
@@ -121,7 +124,7 @@ export default class OfferController extends Controller {
     req: Request<unknown, unknown, unknown, {count?: string}>,
     res: Response
   ): Promise<void> {
-    const count = this.extractCount(req);
+    const count = OfferController.extractCount(req);
     const offers = await this.offerService.findAll(count);
 
     const extendedOffers = await Promise.all(offers.map(
@@ -131,7 +134,7 @@ export default class OfferController extends Controller {
       })
     ));
 
-    this.send(res, StatusCodes.OK, fillDTO(OfferDTO, extendedOffers));
+    this.ok(res, fillDTO(OfferDTO, extendedOffers));
   }
 
   public async createOffer(
@@ -180,6 +183,8 @@ export default class OfferController extends Controller {
     res: Response
   ): Promise<void> {
     await this.offerService.deleteById(offerId);
+    await this.favoriteService.deleteByOfferId(offerId);
+    await this.commentService.deleteByOfferId(offerId);
 
     this.noContent(res);
   }
@@ -230,7 +235,7 @@ export default class OfferController extends Controller {
     this.ok(res, fillDTO(OfferDTO, extendedOffer));
   }
 
-  private extractCount({query}: Request<unknown, unknown, unknown, {count?: string}>): number {
+  public static extractCount({query}: Request<unknown, unknown, unknown, {count?: string}>): number {
     if (!query.count) {
       return DEFAULT_OFFERS_COUNT;
     } else {

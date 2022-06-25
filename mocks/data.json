@@ -57,11 +57,11 @@
       "Eren.yeager"
     ],
     "avatars": [
-      "https://9.react.pages.academy/static/avatar/1.jpg",
-      "https://9.react.pages.academy/static/avatar/2.jpg",
-      "https://9.react.pages.academy/static/avatar/3.jpg",
-      "https://9.react.pages.academy/static/avatar/4.jpg",
-      "https://9.react.pages.academy/static/avatar/5.jpg"
+      "avatar-1.jpg",
+      "avatar-2.jpg",
+      "avatar-3.jpg",
+      "avatar-4.jpg",
+      "avatar-5.jpg"
     ],
     "userTypes": [
       "regular",

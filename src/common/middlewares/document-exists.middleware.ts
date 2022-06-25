@@ -16,7 +16,6 @@ export default class DocumentExistsMiddleware implements MiddlewareInterface {
     const documentId = params[this.paramName];
 
     if (!await this.service.exists(documentId)) {
-      console.log('hello');
       throw new HttpError(
         StatusCodes.BAD_REQUEST,
         `${this.entityName} with ${documentId} not found!`,

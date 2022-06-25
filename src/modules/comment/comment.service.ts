@@ -6,8 +6,8 @@ import {CommentEntity, CommentModel} from './comment.entity.js';
 import CreateCommentDTO from './dto/create-comment.dto.js';
 import {LoggerInterface} from '../../common/logger/logger.interface.js';
 import {ObjectId} from 'mongoose';
-import {MAX_COMMENTS_COUNT} from '../../consts.js';
-import { Component } from '../../types/components.js';
+import {MAX_COMMENTS_COUNT, SortType} from '../../consts.js';
+import {Component} from '../../types/components.js';
 
 
 @injectable()
@@ -26,9 +26,15 @@ export default class CommentService implements CommentServiceInterface {
   public async findAllByOfferId(offerId: ObjectId | string): Promise<DocumentType<CommentEntity>[]> {
     return this.commentModel
       .find({offer: offerId})
-      .sort({createdAt: -1})
+      .sort({createdAt: SortType.Down})
       .limit(MAX_COMMENTS_COUNT)
       .populate('author')
       .exec();
+  }
+
+  public async deleteByOfferId(offerId: string | ObjectId): Promise<number> {
+    const result = await this.commentModel.deleteMany({offer: offerId}).exec();
+
+    return result.deletedCount;
   }
 }

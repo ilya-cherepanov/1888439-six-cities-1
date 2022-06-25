@@ -8,6 +8,7 @@ import CreateOfferDTO from './dto/create-offer.dto.js';
 import {OfferServiceInterface} from './offer-service.interface.js';
 import {OfferEntity} from './offer.entity.js';
 import UpdateOfferDTO from './dto/update-offer.dto.js';
+import {SortType} from '../../consts.js';
 
 
 @injectable()
@@ -25,19 +26,19 @@ export default class OfferService implements OfferServiceInterface {
     const result = await this.offerModel.create(dto);
     this.logger.info(`New offer created: '${dto.title}'`);
 
-    return result;
+    return result.populate('author');
   }
 
   public async findAll(count: number): Promise<DocumentType<OfferEntity>[]> {
-    return this.offerModel.find({}).sort({date: -1}).limit(count).exec();
+    return this.offerModel.find({}).sort({createdAt: SortType.Down}).limit(count).populate('author').exec();
   }
 
   public async findById(offerId: ObjectId | string): Promise<DocumentType<OfferEntity> | null> {
-    return this.offerModel.findById(offerId).exec();
+    return this.offerModel.findById(offerId).populate('author').exec();
   }
 
   public async updateById(offerId: ObjectId | string, dto: UpdateOfferDTO): Promise<DocumentType<OfferEntity> | null> {
-    return this.offerModel.findByIdAndUpdate(offerId, dto).exec();
+    return this.offerModel.findByIdAndUpdate(offerId, dto, {new: true}).populate('author').exec();
   }
 
   public async deleteById(offerId: ObjectId | string): Promise<DocumentType<OfferEntity> | null> {
@@ -45,7 +46,7 @@ export default class OfferService implements OfferServiceInterface {
   }
 
   public async findPremium(count: number): Promise<DocumentType<OfferEntity>[]> {
-    return this.offerModel.find({isPremium: true}).sort({date: -1}).limit(count).exec();
+    return this.offerModel.find({isPremium: true}).sort({createdAt: SortType.Down}).limit(count).populate('author').exec();
   }
 
   public async incCommentsById(offerId: ObjectId | string): Promise<DocumentType<OfferEntity> | null> {

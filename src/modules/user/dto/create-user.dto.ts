@@ -1,4 +1,4 @@
-import {IsEmail, IsEnum, IsOptional, IsString, IsUrl, MaxLength, MinLength} from 'class-validator';
+import {IsEmail, IsEnum, IsString, MaxLength, MinLength} from 'class-validator';
 import {Password, UserName} from '../../../consts.js';
 import {UserType} from '../../../types/user-type.enum.js';
 
@@ -16,10 +16,6 @@ export default class CreateUserDTO {
   @MinLength(Password.MinLength, {message: `password length must be at least ${Password.MinLength} characters`})
   @MaxLength(Password.MaxLength, {message: `password length must be less than ${Password.MaxLength} characters`})
   public password!: string;
-
-  @IsOptional()
-  @IsUrl({}, {message: 'avatar must be url'})
-  public avatar?: string;
 
   @IsEnum(UserType, {message: 'userType must be of UserType type'})
   public userType!: UserType;

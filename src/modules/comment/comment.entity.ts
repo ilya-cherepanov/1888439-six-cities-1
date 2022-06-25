@@ -9,6 +9,8 @@ const {prop, modelOptions, index} = typegoose;
 @modelOptions({
   schemaOptions: {
     collection: 'comments',
+    toJSON: {virtuals: true},
+    toObject: {virtuals: true},
   }
 })
 @index({author: 1, offer: 1}, {unique: true})

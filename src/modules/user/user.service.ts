@@ -8,6 +8,7 @@ import {Component} from '../../types/components.js';
 import {LoggerInterface} from '../../common/logger/logger.interface.js';
 import {UserServiceInterface} from '../../modules/user/user-service.interface.js';
 import LoginUserDTO from './dto/login-user.dto.js';
+import UpdateUserDTO from './dto/update-user.dto.js';
 
 
 @injectable()
@@ -53,5 +54,9 @@ export default class UserService implements UserServiceInterface {
     }
 
     return null;
+  }
+
+  public async updateById(userId: string | ObjectId, update: UpdateUserDTO): Promise<DocumentType<UserEntity> | null> {
+    return this.userModel.findByIdAndUpdate(userId, update, {new: true}).exec();
   }
 }

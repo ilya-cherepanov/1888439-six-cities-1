@@ -92,6 +92,12 @@ enum CommentRating {
 }
 
 
+enum SortType {
+  Down = -1,
+  Up = 1,
+}
+
+
 const IMAGES_COUNT = 6;
 
 const MIN_GOODS = 1;
@@ -111,6 +117,18 @@ const SUPPORTED_IMAGE_FORMATS = [
 
 const JWT_ALGORITHM = 'HS256';
 
+const STATIC_RESOURCE_FIELDS = [
+  'avatar',
+];
+
+const AVATARS = [
+  'avatar-1.jpg',
+  'avatar-2.jpg',
+  'avatar-3.jpg',
+  'avatar-4.jpg',
+  'avatar-5.jpg',
+];
+
 
 export {
   CityLocations,
@@ -125,6 +143,7 @@ export {
   Password,
   CommentRating,
   Comment,
+  SortType,
   TSV_ARRAY_DELIMITER,
   IMAGES_COUNT,
   MIN_GOODS,
@@ -133,4 +152,6 @@ export {
   SUPPORTED_IMAGE_FORMATS,
   MAX_COMMENTS_COUNT,
   JWT_ALGORITHM,
+  STATIC_RESOURCE_FIELDS,
+  AVATARS,
 };

@@ -7,4 +7,5 @@ export interface FavoriteServiceInterface {
   getFavoriteStatus(offerId: ObjectId | string, userId: ObjectId | string | null): Promise<boolean>;
   setFavoriteStatus(offerId: ObjectId | string, userId: ObjectId | string, status: boolean): Promise<boolean>;
   getFavorites(userId: string | ObjectId): Promise<DocumentType<FavoriteEntity>[]>;
+  deleteByOfferId(offerId: string | ObjectId): Promise<number>;
 }

@@ -14,6 +14,9 @@ import {fillDTO} from '../../utils/other.js';
 import CommentDTO from './dto/comment.dto.js';
 import PrivateRouteMiddleware from '../../common/middlewares/private-route.middleware.js';
 import InjectUserIdMiddleware from '../../common/middlewares/inject-user.middleware.js';
+import ValidateDTOMiddleware from '../../common/middlewares/validate-dto.middleware.js';
+import InjectOfferIdMiddleware from '../../common/middlewares/inject-offer.middleware.js';
+import {ConfigInterface} from '../../common/config/config.interface.js';
 
 
 type GetCommentsParams = {
@@ -24,11 +27,12 @@ type GetCommentsParams = {
 @injectable()
 export default class CommentController extends Controller {
   constructor(
-    @inject(Component.LoggerInterface) protected readonly logger: LoggerInterface,
     @inject(Component.CommentServiceInterface) private readonly commentService: CommentServiceInterface,
     @inject(Component.OfferServiceInterface) private readonly offerService: OfferServiceInterface,
+    @inject(Component.LoggerInterface) logger: LoggerInterface,
+    @inject(Component.ConfigInterface) config: ConfigInterface,
   ) {
-    super(logger);
+    super(logger, config);
 
     this.logger.info('Register routes for CommentController…');
 
@@ -51,6 +55,8 @@ export default class CommentController extends Controller {
         new InjectUserIdMiddleware('author'),
         new ValidateObjectIdMiddleware('offerId'),
         new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
+        new InjectOfferIdMiddleware('offer'),
+        new ValidateDTOMiddleware(CreateCommentDTO),
       ],
     });
   }
