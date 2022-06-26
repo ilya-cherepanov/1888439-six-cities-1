@@ -3,7 +3,6 @@ import { getToken } from './token';
 import { store } from '../store';
 import { setToDefault } from '../store/user-data/user-data';
 
-// const BACKEND_URL = 'https://9.react.pages.academy/six-cities';
 const BACKEND_URL = 'http://localhost:4000';
 const REQUEST_TIMEOUT = 5000;
 

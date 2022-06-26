@@ -129,6 +129,8 @@ const AVATARS = [
   'avatar-5.jpg',
 ];
 
+const DATA_CHUNK_SIZE = 2 ** 12;
+
 
 export {
   CityLocations,
@@ -154,4 +156,5 @@ export {
   JWT_ALGORITHM,
   STATIC_RESOURCE_FIELDS,
   AVATARS,
+  DATA_CHUNK_SIZE,
 };

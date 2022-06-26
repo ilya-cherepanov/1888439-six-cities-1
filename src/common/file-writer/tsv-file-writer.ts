@@ -1,5 +1,6 @@
 import {once} from 'events';
 import {createWriteStream, WriteStream} from 'fs';
+import {DATA_CHUNK_SIZE} from '../../consts.js';
 import {FileWriterInterface} from './file-writer.interface.js';
 
 
@@ -10,7 +11,7 @@ export class TSVFileWriter implements FileWriterInterface {
     this.stream = createWriteStream(fileName, {
       flags: 'w',
       encoding: 'utf-8',
-      highWaterMark: 2 ** 12,
+      highWaterMark: DATA_CHUNK_SIZE,
       autoClose: true,
     });
   }

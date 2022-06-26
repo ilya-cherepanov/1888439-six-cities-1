@@ -1,5 +1,4 @@
 import { useEffect, useCallback } from 'react';
-// import { Link, useParams, useNavigate } from 'react-router-dom';
 import { Link, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Header from '../../components/header/header';
@@ -14,7 +13,6 @@ import { getActiveOffer, getIsLoading } from '../../store/offer-data/selectors';
 
 function EditPage() {
   const dispatch = useAppDispatch();
-  // const navigate = useNavigate();
   const { id } = useParams();
   const offer = useAppSelector(getActiveOffer);
   const isLoading = useAppSelector(getIsLoading);
@@ -32,9 +30,6 @@ function EditPage() {
     if (response.meta.requestStatus === 'rejected') {
       toast.error('Can\'t edit offer');
     }
-    // } else {
-    //   navigate(`${AppRoute.OfferBase}${id}`);
-    // }
   }, [dispatch]);
 
   if (isLoading) {

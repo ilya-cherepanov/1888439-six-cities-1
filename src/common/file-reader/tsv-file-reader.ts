@@ -1,5 +1,6 @@
 import EventEmitter from 'events';
 import {createReadStream} from 'fs';
+import {DATA_CHUNK_SIZE} from '../../consts.js';
 import {FileReaderInterface} from './file-reader.interface.js';
 
 
@@ -10,7 +11,7 @@ export default class TSVFileReader extends EventEmitter implements FileReaderInt
 
   public async read(): Promise<void> {
     const stream = createReadStream(this.fileName, {
-      highWaterMark: 2 ** 12,
+      highWaterMark: DATA_CHUNK_SIZE,
       encoding: 'utf-8',
     });
 
@@ -22,12 +23,14 @@ export default class TSVFileReader extends EventEmitter implements FileReaderInt
       for await (const chunk of stream) {
         lineRead += chunk.toString();
 
-        while ((endLinePosition = lineRead.indexOf('\n')) >= 0) {
+        endLinePosition = lineRead.indexOf('\n');
+        while (endLinePosition >= 0) {
           const row = lineRead.slice(0, endLinePosition - 1);
           lineRead = lineRead.slice(++endLinePosition);
           importedRowCount += 1;
 
           await new Promise((resolve) => { this.emit('row', row, resolve); });
+          endLinePosition = lineRead.indexOf('\n');
         }
       }
 

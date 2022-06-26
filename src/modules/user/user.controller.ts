@@ -19,7 +19,6 @@ import ValidateDTOMiddleware from '../../common/middlewares/validate-dto.middlew
 import {createJWT} from '../../utils/cryptography.js';
 import {JWT_ALGORITHM} from '../../consts.js';
 import PrivateRouteMiddleware from '../../common/middlewares/private-route.middleware.js';
-// import CheckUploadAvatarAccessMiddleware from '../../common/middlewares/check-upload-avatar-access.middleware.js';
 import CreatedUserDTO from './dto/created-user.dto.js';
 import UploadUserAvatarDTO from './dto/upload-user-avatar.dto.js';
 
@@ -61,8 +60,6 @@ export default class UserController extends Controller {
       method: HttpMethod.Post,
       handler: this.uploadAvatar,
       middlewares: [
-        // new PrivateRouteMiddleware(),
-        // new CheckUploadAvatarAccessMiddleware(),
         new ValidateObjectIdMiddleware('userId'),
         new UploadFileMiddleware(this.config.get('UPLOAD_FILE_DIRECTORY'), 'avatar'),
       ],

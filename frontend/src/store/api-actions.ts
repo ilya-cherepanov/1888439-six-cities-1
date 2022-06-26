@@ -25,7 +25,6 @@ import {
 import { setUser, setAuthorizationStatus } from './user-data/user-data';
 import { AppDispatch, State } from '../types/state';
 import { Offer } from '../types/offer';
-// import { Review } from '../types/review';
 import { NewReview } from '../types/new-review';
 import { AuthData } from '../types/auth-data';
 import { Token } from '../types/token';
@@ -51,7 +50,6 @@ export const fetchOffers = createAsyncThunk<void, undefined, AsyncThunkConfig>(
     dispatch(setOffersIsLoading(true));
     try {
       const { data } = await api.get<ApiOffer[]>(APIRoute.Offers);
-      // dispatch(setOffers(data));
       const offers = data.map((apiOffer) => transformApiOfferToOffer(apiOffer));
       dispatch(setOffers(offers));
     } catch {
@@ -68,7 +66,6 @@ export const fetchOffer = createAsyncThunk<void, string, AsyncThunkConfig>(
     dispatch(setOfferIsLoading(true));
     try {
       const { data } = await api.get<ApiOffer>(`${APIRoute.Offers}/${id}`);
-      // dispatch(setActiveOffer(data));
       const offer = transformApiOfferToOffer(data);
       dispatch(setActiveOffer(offer));
     } catch {
@@ -138,7 +135,6 @@ export const fetchPremiumOffers = createAsyncThunk<
     dispatch(setPremiumOffersIsLoading(true));
     try {
       const { data } = await api.get<ApiOffer[]>(
-        // `${APIRoute.Offers}/${id}${APIRoute.Premium}`
         APIRoute.Premium,
       );
       const offers = data.map((apiOffer) => transformApiOfferToOffer(apiOffer));
@@ -219,7 +215,6 @@ export const logout = createAsyncThunk<void, undefined, AsyncThunkConfig>(
   `${NameSpace.User}/logout`,
   async (_arg, { dispatch, extra: api }) => {
     try {
-      // await api.delete(APIRoute.Logout);
       dropToken();
       dispatch(setAuthorizationStatus(AuthorizationStatus.NoAuth));
       dispatch(setUser(null));
@@ -268,11 +263,6 @@ export const setFavorite = createAsyncThunk<
     }
   }
 );
-
-// type CreatedApiUser = ApiUser & {
-//   id: string,
-//   token: string,
-// };
 
 export const registerUser = createAsyncThunk<void, NewUser, AsyncThunkConfig>(
   `${NameSpace.User}/register`,
