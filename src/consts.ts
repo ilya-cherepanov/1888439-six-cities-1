@@ -60,7 +60,7 @@ enum Location {
 
 enum OfferTitle {
   Min = 10,
-  Max = 120,
+  Max = 100,
 }
 
 enum OfferDescription {
